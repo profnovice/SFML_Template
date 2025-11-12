@@ -61,6 +61,9 @@ int main()
 
         myEntity.setVecPosition(Vec2(myEntity.getVecPosition().x, myEntity.getVecPosition().y + 1) );
         window.draw(myEntity.getShape());
+
+        text.setFillColor(sf::Color(counterLoop, 255 - counterLoop, .5));
+
         window.draw(text);
        
 
