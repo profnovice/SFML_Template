@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>//Simple Fast Multi-media Library
 #include <fstream>
-
+#include "Entity.h"
+#include "Vec2.h"
 
 /*
 std::string
@@ -35,6 +36,11 @@ public:
 
 };
 */
+
+Entity myEntity(1);
+
+
+
 //namespace
 namespace globalVariables
 {

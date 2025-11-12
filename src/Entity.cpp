@@ -6,3 +6,15 @@ Entity::Entity(int entityID)
 {
 	
 }
+
+
+
+void Entity::setVecPosition(const Vec2 position)
+{
+	m_position = position;
+}
+
+const Vec2 Entity::getVecPosition()
+{
+	return m_position;
+}
