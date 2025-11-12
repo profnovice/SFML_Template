@@ -8,7 +8,7 @@ std::vector
 std::map
 */
 
-
+/*
 //definition
 class Entity
 {
@@ -34,7 +34,7 @@ public:
 
 
 };
-
+*/
 //namespace
 namespace globalVariables
 {
@@ -55,7 +55,6 @@ int main()
     sf::Color newColor(255, 255, 255);
     myShape.setFillColor(newColor);
 
-    Entity myEntity(100);
 
 
     while (window.isOpen())
