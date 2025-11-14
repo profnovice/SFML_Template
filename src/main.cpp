@@ -260,6 +260,8 @@ int main()
     bool keyDown_S = false;
     bool keyDown_Shift = false;
 
+    bool isPaused = false;
+
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -271,7 +273,8 @@ int main()
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
-                    window.close();
+                    if (!isPaused) isPaused = true;
+                    else { isPaused = false; }
 
                 if (keyPressed->scancode == sf::Keyboard::Scancode::A)
                 {
@@ -349,7 +352,10 @@ int main()
      
         }
 
-        
+        if (isPaused)
+        {
+            continue;
+        }
         
 
         movementDir.x = 0;
@@ -379,7 +385,7 @@ int main()
             movementMultiplyer = 2.0f;
         }
 
-
+      
 
         
         window.clear();
