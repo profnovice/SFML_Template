@@ -177,8 +177,11 @@ int main()
 
 
 
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
+    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project", sf::Style::Default);
     window.setFramerateLimit(144);
+    sf::Image iconImage("assets/SFMLPracticeIcon.png");
+    window.setIcon(iconImage);
+ 
 
 
     std::ifstream fin("assets/config.txt");
@@ -225,6 +228,10 @@ int main()
     
     text.setPosition({1000, 10});
     text.setFillColor(sf::Color(255, 255, 255));
+
+    sf::Text fpsText(bitFont);
+    fpsText.setPosition({ 100,10 });
+    fpsText.setFillColor(sf::Color(255, 255, 255));
     
 
     int circleRadius = 64;
@@ -235,7 +242,23 @@ int main()
 
     Entity myEntity =  Entity(1, myShape);
 
+
     int counterLoop = 0;
+
+    Vec2 movementDir(0,0);
+    float movementMultiplyer = 1.0f;
+
+    int keysDown = 0;
+
+    sf::Clock clock;
+    float lastTime = 0;
+
+    bool keyDown_A = false;
+    bool keyDown_D = false;
+    bool keyDown_W = false;
+    bool keyDown_S = false;
+    bool keyDown_Shift = false;
+
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -244,24 +267,131 @@ int main()
             {
                 window.close();
             }
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+            {
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                    window.close();
+
+                if (keyPressed->scancode == sf::Keyboard::Scancode::A)
+                {
+                    keyDown_A = true;
+
+
+                }
+                if (keyPressed->scancode == sf::Keyboard::Scancode::D)
+                {
+                    keyDown_D = true;
+
+
+                }
+                if (keyPressed->scancode == sf::Keyboard::Scancode::W)
+                {
+                    keyDown_W = true;
+
+
+                }
+                if (keyPressed->scancode == sf::Keyboard::Scancode::S)
+                {
+                    keyDown_S = true;
+
+
+                }
+                if (keyPressed->scancode == sf::Keyboard::Scancode::LShift)
+                {
+                    keyDown_Shift = true;
+
+
+                }
+
+                
+            }
+            else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
+            {
+                if (keyReleased->scancode == sf::Keyboard::Scancode::A)
+                {
+
+                    keyDown_A = false;
+                }
+
+                if (keyReleased->scancode == sf::Keyboard::Scancode::D)
+                {
+
+                    keyDown_D = false;
+                }
+                if (keyReleased->scancode == sf::Keyboard::Scancode::W)
+                {
+
+                    keyDown_W = false;
+                }
+
+                if (keyReleased->scancode == sf::Keyboard::Scancode::S)
+                {
+
+                    keyDown_S = false;
+                }
+                if (keyReleased->scancode == sf::Keyboard::Scancode::LShift)
+                {
+
+                    keyDown_Shift = false;
+                }
+
+                
+            }
+            
 
            
      
         }
+
+        float currentTime = clock.restart().asSeconds();
+        float fps = 1.f / (currentTime - lastTime);
+        lastTime = currentTime;
+        movementDir.x = 0;
+        movementDir.y = 0;
+        movementMultiplyer = 1.0f;
+
+        if (keyDown_A) 
+        {
+            movementDir.x += -1;
+        }
+
+        if (keyDown_D)
+        {
+            movementDir.x += 1;
+        }
+        if (keyDown_W)
+        {
+            movementDir.y += -1;
+        }
+
+        if (keyDown_S)
+        {
+            movementDir.y += 1;
+        }
+        if (keyDown_Shift) 
+        {
+            movementMultiplyer = 2.0f;
+        }
+
+
+
         
         window.clear();
         //magical draw area
         text.setString(std::to_string(counterLoop));
 
-        myEntity.setVecPosition(Vec2(myEntity.getVecPosition().x, myEntity.getVecPosition().y + 1) );
+        fpsText.setString(std::to_string(fps));
+
+        myEntity.setVecPosition(Vec2(myEntity.getVecPosition().x + movementDir.x * movementMultiplyer, myEntity.getVecPosition().y + movementDir.y * movementMultiplyer) );
 
         window.draw(myEntity.getShape());
-        window.draw(myShape); //somehow entity is being passed by value to the entity constructor ie. there's now two
+        //window.draw(myShape); //somehow entity is being passed by value to the entity constructor ie. there's now two
         //sf::CircleShape specialShape = myEntity.getShape();
         //window.draw(specialShape);
         text.setFillColor(sf::Color(counterLoop, 255 - counterLoop, .5));
 
         window.draw(text);
+        window.draw(fpsText);
        
         for (Entity ent : entityVector)
         {
@@ -275,5 +405,9 @@ int main()
         window.display();
 
         counterLoop = (counterLoop +1)% 256;
+
+        
+       
+        
     }
 }
