@@ -247,11 +247,18 @@ int main()
 
 
     sf::Text pauseText(bitFont);
+
+   
     pauseText.setString("PAUSED");
     pauseText.setFillColor(sf::Color(255, 255, 255));
     pauseText.setScale({2.0f,2.0f});
     pauseText.setOrigin(pauseText.getLocalBounds().getCenter());
     pauseText.setPosition({(float)windowWidth/2 , (float)windowHeight/2 });
+
+    sf::Text clockText(bitFont);
+    clockText.setString("Clock");
+    clockText.setFillColor(sf::Color(255, 255, 255));
+    clockText.setPosition({ (float)windowWidth-200, 100.0f});
     
     
 
@@ -309,8 +316,17 @@ int main()
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
-                    if (!isPaused) isPaused = true;
-                    else { isPaused = false; }
+                    if (!isPaused)
+                    {
+                        isPaused = true;
+                        clock.stop();
+                    }
+                    else 
+                    {
+                        isPaused = false; 
+                        clock.start();
+
+                    }
 
                 if (keyPressed->scancode == sf::Keyboard::Scancode::A)
                 {
@@ -410,6 +426,7 @@ int main()
 
         if (isPaused)
         {
+
             window.clear();
             window.draw(pauseText);
             window.display();
@@ -451,6 +468,10 @@ int main()
         //magical draw area
         text.setString(std::to_string(counterLoop));
 
+        std::string clockString = std::to_string(clock.getElapsedTime().asSeconds());
+        clockText.setString(clockString);
+
+
         //sf::Time elapsed = clock.getElapsedTime();
         std::string deltaTimeString = std::to_string( deltaTime);
         fpsText.setString(deltaTimeString);
@@ -464,6 +485,8 @@ int main()
         window.draw(myEntity.getShape());
 
         window.draw(mouse);
+
+        window.draw(clockText);
         //window.draw(myShape); //somehow entity is being passed by value to the entity constructor ie. there's now two
         //sf::CircleShape specialShape = myEntity.getShape();
         //window.draw(specialShape);
