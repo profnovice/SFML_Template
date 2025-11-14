@@ -2,8 +2,10 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <memory>
 #include "Entity.h"
 #include "Vec2.h"
+
 
 //Lecture 3
 /*
@@ -230,6 +232,17 @@ int main()
 
 
     }
+
+    std::vector<std::shared_ptr<sf::Shape>> shared_Shapes;
+
+    std::shared_ptr<sf::Shape> shared_Shape01 = std::make_shared<sf::CircleShape>(20);
+    std::shared_ptr<sf::Shape> shared_Shape02 = std::make_shared<sf::RectangleShape>(sf::Vector2f(40,40));
+    shared_Shape01->setPosition({200, 200});
+
+    shared_Shapes.push_back(shared_Shape01);
+    shared_Shapes.push_back(shared_Shape02);
+
+
 
 
     sf::Font bitFont;
@@ -498,9 +511,9 @@ int main()
         
         
        
-        for (Entity ent : entityVector)
+        for (auto & s : shared_Shapes)
         {
-            window.draw(ent.getShape());
+            window.draw(*s);
 
         }
 
