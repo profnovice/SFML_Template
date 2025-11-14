@@ -179,11 +179,19 @@ int main()
     unsigned int windowHeight = 1080u;
 
     auto window = sf::RenderWindow(sf::VideoMode({windowWidth, windowHeight}), "CMake SFML Project", sf::Style::Default);
+    window.setMouseCursorVisible(false);
     window.setFramerateLimit(144);
     sf::Image iconImage("assets/SFMLPracticeIcon.png");
     window.setIcon(iconImage);
  
+    sf::ConvexShape mouse;
 
+    mouse.setPointCount(3);
+    mouse.setPoint(0, {0,0});
+    mouse.setPoint(1, { 30,30 });
+    mouse.setPoint(2, { 0,50});
+    mouse.setFillColor(sf::Color(64, 64, 64));
+    mouse.setOutlineColor(sf::Color(255, 255, 255));
 
     std::ifstream fin("assets/config.txt");
 
@@ -197,7 +205,8 @@ int main()
     int newPosx;
     int newPosy;
 
-    
+    sf::Vector2i mousePosition;
+
     while (fin >> newId) 
     {
         std::cout << "read once" << std::endl;
@@ -259,6 +268,9 @@ int main()
     bool keyDown_W = false;
     bool keyDown_S = false;
     bool keyDown_Shift = false;
+    
+
+
 
     bool isPaused = false;
 
@@ -270,6 +282,8 @@ int main()
             {
                 window.close();
             }
+
+            //window.setKeyRepeatEnabled(false) use if I want to make the press a single action rather than on a heartbeat 
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
@@ -341,6 +355,14 @@ int main()
 
                 
             }
+            else if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>())
+            {
+                std::cout << "x" << (float)mousePosition.x << "y" << (float)mousePosition.y << std::endl;
+                mousePosition = mouseMoved->position;
+                mouse.setPosition({(float)mousePosition.x,(float)mousePosition.y});
+
+            }
+
             else if (const auto* resized = event->getIf<sf::Event::Resized>()) 
             {
                 windowWidth = resized->size.x;
@@ -399,6 +421,8 @@ int main()
         myEntity.setVecPosition(Vec2(myEntity.getVecPosition().x + movementDir.x * movementMultiplyer, myEntity.getVecPosition().y + movementDir.y * movementMultiplyer) );
 
         window.draw(myEntity.getShape());
+
+        window.draw(mouse);
         //window.draw(myShape); //somehow entity is being passed by value to the entity constructor ie. there's now two
         //sf::CircleShape specialShape = myEntity.getShape();
         //window.draw(specialShape);
