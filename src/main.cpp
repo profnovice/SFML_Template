@@ -383,6 +383,13 @@ int main()
                 windowWidth = resized->size.x;
                 windowHeight = resized->size.y;
                 window.create(sf::VideoMode({ windowWidth, windowHeight }), "CMake SFML Project", sf::Style::Default);
+                window.setMouseCursorVisible(false);
+                window.setFramerateLimit(144);
+                sf::Image iconImage("assets/SFMLPracticeIcon.png");
+                window.setIcon(iconImage);
+
+
+
                 pauseText.setPosition({ (float)windowWidth / 2 , (float)windowHeight / 2 });
             }
 
