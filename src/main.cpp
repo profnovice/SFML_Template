@@ -242,6 +242,15 @@ int main()
     sf::Text fpsText(bitFont);
     fpsText.setPosition({ 100,10 });
     fpsText.setFillColor(sf::Color(255, 255, 255));
+
+
+    sf::Text pauseText(bitFont);
+    pauseText.setString("PAUSED");
+    pauseText.setFillColor(sf::Color(255, 255, 255));
+    pauseText.setScale({2.0f,2.0f});
+    pauseText.setOrigin(pauseText.getLocalBounds().getCenter());
+    pauseText.setPosition({(float)windowWidth/2 , (float)windowHeight/2 });
+    
     
 
     int circleRadius = 64;
@@ -261,7 +270,13 @@ int main()
     int keysDown = 0;
 
     sf::Clock clock;
-    
+
+
+    sf::Texture ceilingTexture("assets/CeilingSquareAltered.png");
+    ceilingTexture.setSmooth(false);
+    sf::Sprite ceilingSprite(ceilingTexture);
+    ceilingSprite.setPosition({ (float)windowWidth - 256.0f, (float)windowHeight - 256.0f });
+
 
     bool keyDown_A = false;
     bool keyDown_D = false;
@@ -368,14 +383,22 @@ int main()
                 windowWidth = resized->size.x;
                 windowHeight = resized->size.y;
                 window.create(sf::VideoMode({ windowWidth, windowHeight }), "CMake SFML Project", sf::Style::Default);
+                pauseText.setPosition({ (float)windowWidth / 2 , (float)windowHeight / 2 });
             }
 
            
      
         }
 
+
+
+        
+
         if (isPaused)
         {
+            window.clear();
+            window.draw(pauseText);
+            window.display();
             continue;
         }
         
@@ -420,6 +443,8 @@ int main()
 
         myEntity.setVecPosition(Vec2(myEntity.getVecPosition().x + movementDir.x * movementMultiplyer, myEntity.getVecPosition().y + movementDir.y * movementMultiplyer) );
 
+        window.draw(ceilingSprite);
+
         window.draw(myEntity.getShape());
 
         window.draw(mouse);
@@ -430,6 +455,8 @@ int main()
 
         window.draw(text);
         window.draw(fpsText);
+        
+        
        
         for (Entity ent : entityVector)
         {
