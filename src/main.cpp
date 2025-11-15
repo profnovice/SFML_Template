@@ -154,12 +154,29 @@ public:
 
 */
 
-//Lecture 4
+//Lecture 5
 /*
+    //Movement System
+    for (e : entities) { e.pos += e.speed; }
+
+    //Collision System
+    for (b : bullets)
+        for (e : enemies)
+            if (Physics:IsCollision(b,e))
+                e.health -= b.damage;
+                b.destroy();
+
+    Rendering System
+    for (e : entities) { window.draw(e.sprite, e.pos); }
 
 
-
-
+    Architecture
+    GameEngine
+        >Scene
+            >Systems
+            >EntityManager
+                >Entity
+                    >Component
 
 */
 
