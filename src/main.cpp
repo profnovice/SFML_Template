@@ -5,6 +5,7 @@
 #include <memory>
 #include "Entity.h"
 #include "Vec2.h"
+#include "Components.h"
 
 
 //Lecture 3
@@ -227,7 +228,7 @@ int main()
     int newPosy;
 
     sf::Vector2i mousePosition;
-
+    /*
     while (fin >> newId) 
     {
         //std::cout << "read once" << std::endl;
@@ -249,7 +250,7 @@ int main()
 
 
     }
-
+    */
     std::vector<std::shared_ptr<sf::Shape>> shared_Shapes;
 
     std::shared_ptr<sf::Shape> shared_Shape01 = std::make_shared<sf::CircleShape>(20);
@@ -259,7 +260,15 @@ int main()
     shared_Shapes.push_back(shared_Shape01);
     shared_Shapes.push_back(shared_Shape02);
 
+    Component testComponent = CTransform(Vec2(50,50),Vec2(50,50));
+    Entity testEntity(55, sf::CircleShape(10));
+    testEntity.addComponent(testComponent);
+    CTransform passComp;
+    if (testEntity.getComponent(testComponent)) {
+        passComp.print();
+    }
 
+    
 
 
     sf::Font bitFont;

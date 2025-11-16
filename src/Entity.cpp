@@ -23,6 +23,22 @@ void Entity::setVecPosition(const Vec2 position)
 	m_shape.setPosition({ m_position.x, m_position.y });
 }
 
+void Entity::addComponent(Component inComponent)
+{
+	m_components.push_back(inComponent);
+}
+
+bool Entity::getComponent(Component & inComponent)
+{
+	for (Component c : m_components) {
+		if (typeid(c) == typeid(inComponent)) {
+			inComponent = c;
+			return true;
+		}
+	}
+	return false;
+}
+
 const Vec2 Entity::getVecPosition()
 {
 	return m_position;

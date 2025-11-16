@@ -1,5 +1,6 @@
-#include "Vec2.h"
 #include <SFML/Graphics.hpp>
+#include "Vec2.h"
+#include "Components.h"
 
 #pragma once
 class Entity 
@@ -7,6 +8,7 @@ class Entity
 	const int m_entityID;
 	sf::CircleShape & m_shape;
 	Vec2 m_position;
+	std::vector<Component> m_components;
 
 
 public:
@@ -19,11 +21,13 @@ public:
 
 	void setVecPosition(Vec2);
 
-
+	void addComponent(Component);
+	bool getComponent( Component &);
 
 	const Vec2 getVecPosition();
 	
 	sf::CircleShape& getShape();
+
 
 
 };
