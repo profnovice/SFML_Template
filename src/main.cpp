@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Vec2.h"
 #include "Components.h"
+#include "SimpleEntity.h"
 
 
 //Lecture 3
@@ -192,6 +193,17 @@ public:
         }
     }
 
+    void sRender(std::vector<Entity> & entities)
+    {
+        for (auto & e : entities)
+            if (e.cShape && e.cTransform)
+            {
+                e.cShape->shape.setPosition(e.CTransform->pos);
+                window.draw(e.Shape->shape);
+            }
+        }
+    }
+
 */
 
 
@@ -273,6 +285,7 @@ int main()
     shared_Shapes.push_back(shared_Shape01);
     shared_Shapes.push_back(shared_Shape02);
 
+    /*
     Component testComponent = CTransform(Vec2(50,50),Vec2(50,50));
     Entity testEntity(55, sf::CircleShape(10));
     testEntity.addComponent(testComponent);
@@ -280,8 +293,55 @@ int main()
     if (testEntity.getComponent(testComponent)) {
         passComp.print();
     }
+    */
+
+    std::vector<SimpleEntity> allSimpleEntites;
+
 
     
+
+    for (int i = 0; i < 10; ++i)
+    {
+        SimpleEntity simpEnt;
+        simpEnt.cID = std::make_shared<int>(i*10);
+        std::shared_ptr<std::string> simpEntName;
+        simpEntName = std::make_shared<std::string>(std::string("Name") + std::to_string(i));
+        simpEnt.cName = simpEntName;
+        CTransform intermediateTransform(Vec2(i*69%600, i * 33 % 700), Vec2(0.1 + i, 1.0 - i));
+        simpEnt.cTransform = std::make_shared<CTransform>(intermediateTransform);
+        simpEnt.cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
+        allSimpleEntites.push_back(simpEnt);
+    }
+    SimpleEntity nullEntity;
+
+
+    nullEntity.cID = std::make_shared<int>(9999);
+    nullEntity.cName = std::make_shared<std::string>("im so special");
+    nullEntity.cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
+    nullEntity.cShape->setFillColor(sf::Color::Red);
+    nullEntity.cTransform = std::make_shared<CTransform>(Vec2(900, 900), Vec2(0.1, 1.0));
+
+    allSimpleEntites.push_back(nullEntity);
+
+   
+    
+
+   // std::cout << "cID: " << *simpEnt.cID << " Name: " << *simpEnt.cName <<  std::endl;
+    //if (simpEnt.cShape) {
+       // std::cout << "shape is true" << std::endl;
+   // }
+
+    
+
+    for (auto& e : allSimpleEntites)
+    {
+        if (e.cName && e.cID && e.cTransform)
+        {
+            std::cout << "cID: " << *e.cID << " cName: " << *e.cName << std::endl;
+            e.cTransform->print();
+        }
+
+    }
 
 
     sf::Font bitFont;
@@ -519,6 +579,7 @@ int main()
         
         window.clear();
         //magical draw area
+
         text.setString(std::to_string(counterLoop));
 
         std::string clockString = std::to_string(clock.getElapsedTime().asSeconds());
@@ -555,6 +616,19 @@ int main()
             window.draw(*s);
 
         }
+
+        for (auto& e : allSimpleEntites)
+        {
+
+            if (e.cShape && e.cTransform)
+            {
+                e.cShape->setPosition({e.cTransform->pos.x, e.cTransform->pos.y});
+                window.draw(*e.cShape);
+
+            }
+
+        }
+
 
 
 
