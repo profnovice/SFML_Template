@@ -318,8 +318,8 @@ int main()
 
     for (int i = 0; i < 10; ++i)
     {
-        SimpleEntity simpEnt;
-        simpEnt.cID = std::make_shared<int>(i*10);
+        SimpleEntity simpEnt(i,"Default");
+
         std::shared_ptr<std::string> simpEntName;
         simpEntName = std::make_shared<std::string>(std::string("Name") + std::to_string(i));
         simpEnt.cName = simpEntName;
@@ -328,10 +328,9 @@ int main()
         simpEnt.cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
         allSimpleEntites.push_back(simpEnt);
     }
-    SimpleEntity nullEntity;
+    SimpleEntity nullEntity(512, "Default");
 
 
-    nullEntity.cID = std::make_shared<int>(9999);
     nullEntity.cName = std::make_shared<std::string>("im so special");
     nullEntity.cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
     nullEntity.cShape->setFillColor(sf::Color::Red);
