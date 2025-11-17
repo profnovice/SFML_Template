@@ -12,19 +12,19 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-if(NDEBUG)
+
     if (MINGW)
         add_link_options(-static -static-libstdc++ -static-libgcc)
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
     endif()
 
-endif()
 
 
 
 
-add_executable(main src/main.cpp  "src/Entity.cpp"  "src/Entity.h" "src/Vec2.cpp" "src/Vec2.h"    "src/Components.h" "src/Components.cpp" "src/SimpleEntity.cpp" "src/SimpleEntity.h")
+
+add_executable(main src/main.cpp "src/Entity.cpp"  "src/Entity.h" "src/Vec2.cpp" "src/Vec2.h" "src/Components.h" "src/Components.cpp" "src/SimpleEntity.cpp" "src/SimpleEntity.h")
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)
 

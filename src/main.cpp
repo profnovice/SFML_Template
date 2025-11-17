@@ -314,6 +314,7 @@ int main()
     std::vector<SimpleEntity> allSimpleEntites;
 
     typedef std::vector<std::shared_ptr<SimpleEntity>> EntityVector;
+    typedef std::shared_ptr<SimpleEntity> SimpEntPtr;
 
     EntityVector simpleEntitiesType;
    
@@ -321,7 +322,7 @@ int main()
 
     for (int i = 0; i < 10; ++i)
     {
-        std::shared_ptr<SimpleEntity> simpEnt = (std::make_shared<SimpleEntity>(i, "Default"));
+        SimpEntPtr simpEnt = (std::make_shared<SimpleEntity>(i, "Default"));
 
         std::shared_ptr<std::string> simpEntName;
         simpEntName = std::make_shared<std::string>(std::string("Name") + std::to_string(i));
@@ -331,7 +332,7 @@ int main()
         simpEnt->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
         simpleEntitiesType.push_back(simpEnt);
     }
-    std::shared_ptr<SimpleEntity> nullEntity = (std::make_shared<SimpleEntity>(512, "Broke"));
+    SimpEntPtr nullEntity = (std::make_shared<SimpleEntity>(512, "Broke"));
 
     nullEntity->cName = std::make_shared<std::string>("im so special");
     nullEntity->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
