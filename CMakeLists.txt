@@ -24,7 +24,7 @@ FetchContent_MakeAvailable(SFML)
 
 
 
-add_executable(main src/main.cpp "src/Entity.cpp"  "src/Entity.h" "src/Vec2.cpp" "src/Vec2.h" "src/Components.h" "src/Components.cpp" "src/SimpleEntity.cpp" "src/SimpleEntity.h")
+add_executable(main src/main.cpp "src/Entity.cpp"  "src/Entity.h" "src/Vec2.cpp" "src/Vec2.h" "src/Components.h" "src/Components.cpp" "src/SimpleEntity.cpp" "src/SimpleEntity.h" "src/EntityManager.cpp" "src/EntityManager.h")
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)
 
