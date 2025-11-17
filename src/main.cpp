@@ -223,7 +223,7 @@ int main()
     unsigned int windowWidth = 1920u;
     unsigned int windowHeight = 1080u;
 
-    int frameLimit = 60;
+    int frameLimit = 120;
 
     auto window = sf::RenderWindow(sf::VideoMode({windowWidth, windowHeight}), "CMake SFML Project", sf::Style::Default);
     window.setMouseCursorVisible(false);
@@ -320,14 +320,14 @@ int main()
    
     
 
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 20; ++i)
     {
         SimpEntPtr simpEnt = (std::make_shared<SimpleEntity>(i, "Default"));
 
         std::shared_ptr<std::string> simpEntName;
         simpEntName = std::make_shared<std::string>(std::string("Name") + std::to_string(i));
         simpEnt->cName = simpEntName;
-        CTransform intermediateTransform(Vec2(i*69%600, i * 33 % 700), Vec2(0.1 + i, 1.0 - i));
+        CTransform intermediateTransform(Vec2(i*69%600, i * 33 % 700), Vec2( i *.02, - i * .02));
         simpEnt->cTransform = std::make_shared<CTransform>(intermediateTransform);
         simpEnt->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
         simpleEntitiesType.push_back(simpEnt);
@@ -642,6 +642,15 @@ int main()
 
             if (e->cShape && e->cTransform)
             {
+                
+                if (e->cTransform->pos.x < 0.0f || e->cTransform->pos.x + e->cShape->getSize().x> windowWidth) {
+                    e->cTransform->velocity.x = e->cTransform->velocity.x * -1.0f;
+                }
+                if (e->cTransform->pos.y < 0.0f || e->cTransform->pos.y +e->cShape->getSize().y > windowHeight) {
+                    e->cTransform->velocity.y = e->cTransform->velocity.y * -1.0f;
+                }
+
+                e->cTransform->pos = e->cTransform->pos + e->cTransform->velocity * deltaTime;
                 e->cShape->setPosition({e->cTransform->pos.x, e->cTransform->pos.y});
                 window.draw(*e->cShape);
 
