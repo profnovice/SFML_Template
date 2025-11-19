@@ -25,6 +25,15 @@ SimpEntPtr EntityManager::addEntity(const std::string & tag)
 
 void EntityManager::update()
 {
+	for (auto& e : m_entities)
+	{
+		if (!e->m_alive) {
+			//m_entityMap[e->m_tag].e;
+			//m_entities.erase(e);
+		}
+
+	}
+
 	for (auto & e : m_queueToAdd)
 	{//store in all entities vec
 		m_entities.push_back(e);
