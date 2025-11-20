@@ -4,17 +4,21 @@
 #include "SimpleEntity.h"
 #include <algorithm>
 
+
+
 typedef std::shared_ptr<SimpleEntity> SimpEntPtr;
 typedef std::vector<std::shared_ptr<SimpleEntity>> EntityVec;
 typedef std::unordered_map <std::string, EntityVec> EntityMap;
 #pragma once
+bool is_Dead(const SimpEntPtr);
+
 class EntityManager {
 	EntityVec m_entities;
 	EntityVec m_queueToAdd;
 	EntityMap m_entityMap;
 	size_t m_totalEntities = 0;
 	size_t m_uniqueIdIndex = 0;
-	bool is_Dead(SimpEntPtr);
+	
 
 public:
 	EntityManager();

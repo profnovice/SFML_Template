@@ -304,6 +304,8 @@ int main()
     //vec03 += vec02 + vec01;
     vec03.add(vec01).add(vec02);
    // vec01 -= vec02;
+
+    /*
     if (vec01 != vec02) 
     {
         std::cout << "not equal" << std::endl;
@@ -311,7 +313,7 @@ int main()
     }else{ std::cout << "equal" << std::endl; }
     std::cout << vec03.toString() << std::endl;
 
-
+    */
     std::vector<SimpleEntity> allSimpleEntites;
 
     typedef std::vector<std::shared_ptr<SimpleEntity>> EntityVector;
@@ -380,21 +382,21 @@ int main()
     }
 
 
-    SimpEntPtr tempEntPtr= manager.addEntity("Default");
-    tempEntPtr->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
-    tempEntPtr->cTransform  = std::make_shared<CTransform>(Vec2(900, 900), Vec2(5, 2.0));
-    tempEntPtr->cShape->setFillColor(sf::Color::Blue);
+    //SimpEntPtr tempEntPtr= manager.addEntity("Default");
+    //tempEntPtr->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
+    //tempEntPtr->cTransform  = std::make_shared<CTransform>(Vec2(900, 900), Vec2(5, 2.0));
+    //tempEntPtr->cShape->setFillColor(sf::Color::Blue);
     //simpleEntitiesType.push_back(tempEntPtr);
-    std::cout << tempEntPtr.use_count() << std::endl;
+    //std::cout << tempEntPtr.use_count() << std::endl;
     
-    manager.update();
+    
     for (auto e : manager.getEntitiesWithTag("Odd"))
     {
-        std::cout << e->m_id << std::endl;
+        e->m_alive = false;
     }
     
 
-
+    manager.update();
     
 
    // std::cout << "cID: " << *simpEnt.cID << " Name: " << *simpEnt.cName <<  std::endl;

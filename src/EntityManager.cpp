@@ -8,9 +8,9 @@
 
 */
 
-bool EntityManager::is_Dead(SimpEntPtr e)
+bool is_Dead(const SimpEntPtr e)
 {
-	return ! e->m_alive;
+	return !e->m_alive;
 }
 
 
@@ -44,8 +44,7 @@ EntityVec EntityManager::getEntitiesWithTag(std::string tag)
 void EntityManager::update()
 {
 
-	//const auto deadEnd = std::remove_if(m_entities.begin(), m_entities.end(), is_Dead);
-	//m_entities.erase(deadEnd, m_entities.end());
+	
 	//for (auto& tag : m_entityMap)
 	//{
 	//	std::remove_if(tag begin(), m_entities.end(), is_Dead);
@@ -60,10 +59,11 @@ void EntityManager::update()
 		m_entityMap[e->m_tag].push_back(e);
 
 	}
-	
-	for (auto& e : m_entities)
+	const auto deadEnd = std::remove_if(m_entities.begin(), m_entities.end(), is_Dead);
+	m_entities.erase(deadEnd, m_entities.end());
+	//for (auto& e : m_entities)
 	{
-		std::cout << "ID: " << e->m_id << std::endl;
+		//std::cout << "ID: " << e->m_id << std::endl;
 
 	}
 	m_queueToAdd.clear();
