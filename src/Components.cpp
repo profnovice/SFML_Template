@@ -21,7 +21,7 @@ void CTransform::print()
 }
 
 CDisplayTag::CDisplayTag(const sf::Font& font)
-	:m_font(font), text(sf::Text(m_font))
+	:text(sf::Text(font))
 {
 		
 }

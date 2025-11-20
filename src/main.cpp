@@ -319,8 +319,8 @@ int main()
 
     EntityVector simpleEntitiesType;
    
+ 
     /*
-
     for (int i = 0; i < 20; ++i)
     {
         SimpEntPtr simpEnt = (std::make_shared<SimpleEntity>(i, "Default"));
@@ -333,6 +333,7 @@ int main()
         simpEnt->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
         simpleEntitiesType.push_back(simpEnt);
     }
+    */
     SimpEntPtr nullEntity = (std::make_shared<SimpleEntity>(512, "Broke"));
 
     nullEntity->cName = std::make_shared<std::string>("im so special");
@@ -342,15 +343,12 @@ int main()
 
    // allSimpleEntites.push_back(nullEntity);
 
-    simpleEntitiesType.push_back(nullEntity);
+    //simpleEntitiesType.push_back(nullEntity);
     nullEntity->cShape->setFillColor(sf::Color::Red);
 
-    */
-
-
-    sf::Font bitFont;
-
-    bitFont.openFromFile("assets/8bitOperatorPlus8-Regular.ttf");
+    
+    const sf::Font bitFont("assets/8bitOperatorPlus8-Regular.ttf");
+   
 
     sf::Text text(bitFont);
    
@@ -358,8 +356,15 @@ int main()
 
     for (int i = 0; i < 20; ++i)
     {
-        SimpEntPtr simpEnt = manager.addEntity("Default");
+        SimpEntPtr simpEnt;
 
+        if(i%2 == 0)
+        {
+            simpEnt = manager.addEntity("Odd");
+        }
+        simpEnt = manager.addEntity("Even");
+         
+        
         std::shared_ptr<std::string> simpEntName;
         simpEntName = std::make_shared<std::string>(std::string("Name") + std::to_string(i));
         simpEnt->cName = simpEntName;
@@ -370,6 +375,7 @@ int main()
         simpEnt->cDisplayTag = std::make_shared<CDisplayTag>(bitFont);
         simpEnt->cDisplayTag->text.setString(std::to_string(simpEnt->m_id));
         simpEnt->cDisplayTag->text.setFillColor(sf::Color::Black);
+        
 
     }
 
@@ -378,9 +384,16 @@ int main()
     tempEntPtr->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
     tempEntPtr->cTransform  = std::make_shared<CTransform>(Vec2(900, 900), Vec2(5, 2.0));
     tempEntPtr->cShape->setFillColor(sf::Color::Blue);
-    simpleEntitiesType.push_back(tempEntPtr);
+    //simpleEntitiesType.push_back(tempEntPtr);
     std::cout << tempEntPtr.use_count() << std::endl;
+    
     manager.update();
+    for (auto e : manager.getEntitiesWithTag("Odd"))
+    {
+        std::cout << e->m_id << std::endl;
+    }
+    
+
 
     
 
@@ -691,6 +704,7 @@ int main()
                 window.draw(*e->cShape);
 
             }
+            
             if (e->cDisplayTag && e->cTransform)
             {
 
@@ -698,6 +712,7 @@ int main()
                 window.draw(e->cDisplayTag->text);
 
             }
+            
 
         }
 

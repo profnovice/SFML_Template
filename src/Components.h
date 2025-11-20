@@ -18,7 +18,7 @@ public:
 
 class CDisplayTag : public  Component
 {
-	const sf::Font & m_font;
+	
 public:
 
 	sf::Text text;

@@ -7,7 +7,7 @@ class SimpleEntity
 	
 public:
 	const size_t m_id;
-	const std::string& m_tag;
+	const std::string m_tag;
 	bool m_alive;
 
 	std::shared_ptr<CTransform> cTransform;
@@ -15,7 +15,7 @@ public:
 	std::shared_ptr<sf::RectangleShape> cShape;
 	std::shared_ptr<CDisplayTag> cDisplayTag;
 
-	SimpleEntity(size_t, const std::string &);
+	SimpleEntity(size_t, const std::string);
 
 
 };

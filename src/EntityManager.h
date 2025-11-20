@@ -21,6 +21,7 @@ public:
 	void update();
 	SimpEntPtr addEntity(const std::string &);
 	EntityVec getAllEntities();
+	EntityVec getEntitiesWithTag(std::string);
 
 
 };

@@ -15,6 +15,7 @@ bool EntityManager::is_Dead(SimpEntPtr e)
 
 
 EntityManager::EntityManager()
+	:m_queueToAdd(), m_entities(), m_entityMap()
 	//:m_entities(std::make_shared<std::vector<SimpleEntity>>())
 {
 }
@@ -35,6 +36,11 @@ EntityVec EntityManager::getAllEntities()
 	return m_entities;
 }
 
+EntityVec EntityManager::getEntitiesWithTag(std::string tag)
+{
+	return m_entityMap[tag];
+}
+
 void EntityManager::update()
 {
 
@@ -45,14 +51,16 @@ void EntityManager::update()
 	//	std::remove_if(tag begin(), m_entities.end(), is_Dead);
 
 	//}
-
-	for (auto & e : m_queueToAdd)
+	
+	for (auto e : m_queueToAdd)
 	{//store in all entities vec
 		m_entities.push_back(e);
 		//store in map of tag->entityvector
+		//std::cout << "Tag: " << e->m_tag << std::endl;
 		m_entityMap[e->m_tag].push_back(e);
 
 	}
+	
 	for (auto& e : m_entities)
 	{
 		std::cout << "ID: " << e->m_id << std::endl;
