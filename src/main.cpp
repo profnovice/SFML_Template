@@ -517,6 +517,7 @@ int main()
     bool keyDown_W = false;
     bool keyDown_S = false;
     bool keyDown_Shift = false;
+    bool mouseDown_LeftButton = false;
     
 
     sf::Clock deltaTimeClock;
@@ -640,6 +641,22 @@ int main()
                 mouse.setPosition({(float)mousePosition.x,(float)mousePosition.y});
 
             }
+            else if (const auto* mouseClick = event->getIf<sf::Event::MouseButtonPressed>())
+            {
+                if (mouseClick->button == sf::Mouse::Button::Left)
+                {
+                    mouseDown_LeftButton = true;
+                }
+
+            }
+            else if (const auto* mouseRelease = event->getIf<sf::Event::MouseButtonReleased>())
+            {
+                if (mouseRelease->button == sf::Mouse::Button::Left)
+                {
+                    mouseDown_LeftButton = false;
+                }
+
+                }
 
             else if (const auto* resized = event->getIf<sf::Event::Resized>()) 
             {
