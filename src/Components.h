@@ -1,4 +1,4 @@
-#include <ioStream>
+#include <iostream>
 #include "Vec2.h"
 #include <SFML/Graphics.hpp>
 
