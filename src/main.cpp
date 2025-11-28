@@ -10,223 +10,6 @@
 #include "EntityManager.h"
 
 
-/*
-Separate subject from body with a blank line
-Limit the subject line to 50 characters
-Capitalize the subject line
-Do not end the subject line with a period
-Use the imperative mood in the subject line //if applied this commit will
-Wrap the body at 72 characters
-Use the body to explain what and why vs. how
-*/
-
-//Lecture 3
-/*
-Lecture 3:
-int val = 5; //stack
-int* hval = new int; //heap
-*hval = 5;
-
-int a[5]; //stack
-int* ha = new int[5]; //heap
-ha[3] = 10;
-
-MyClass c(args); //stack
-
-MyClass * hc = new MyClass(args);//heap allocation with new
-
-
-
-RAII can replace "new"
-
-Stack is "static memory" ie. sizes need to be known at compile time
-Memory allocation dependent on runtime variables needs to be heap allocated
-
-
-PtClass* p = new PtClass(5,4);//address to data is allocated to stack, data is allocated to heap
-delete p; // frees up memory at location p 
-
-Why Use Pointers?
-
-1. must use pointer for inheritance
-    Base * ptr = new Derived();
-
-2. Pass by value vs. by reference 
-    Modifying variable passed into function 
-
-3. Pointing to large data
-    Large data can't live on the stack
-
-
-References: "safe pointers" use &
-
-must point to existing data never nullptr
-
-c++ is pass by value
-cost of copying large data
-may want to modify the value passed so pass by reference PBR 
-
-Pass By Reference:
-
-void tennify(int & a) { a = 10; }
-
-int i = 12;
-tennify(i);
-
-Good idea to pass by reference if data is big even if you dont want to change it 
-
-void machineLearn(const BigData & d);
-
-Should pass const primitives by value 
-
-int add(const int & a, const int & b); <<<Needlessly expensive
-int add(const int a, const int b); <<< USE THIS
-
-Pass smart pointers by value rather than reference std::shared_prt<T> 
-    The copy does not influence the inc/dec
-
-
-Resource Acquisition is Initilization RAII
-    Binds the life cycle of a resource that must be aquired before use to the lifetime of an object
-
-
-class IntArray
-{
-    int * array;
-    size_t m_size;
-public:
-    IntArray(size_t size) { array = new int[size];}
-    ~IntArray() {delete array;}
-    int & operator [] (size_t i) {return array[i];}
-}
-
-{ //new scope
-    IntArray arr(10); // mem allocated
-    arr[5] = 21;
-  //when leaving scope stack allocated variables are deallocated 
-  //classes get their destructors called 
-}
-
-Smart Pointers track when an object leaves scope and deallocates the data
-It also has an internal counter 
-
-
-{
-    auto p = std::make_shared<MyClass>(args); //c = 1
-    someOtherThings()
-    // c = 0, deallocate
-} 
-
-void func(std::shared_ptr<MyClass> p) // increment c (c=2)
-{
-    p->doSomething();
-}// decrement c (c = 1)
-
-How to allocate / pass data?
-1. If possible, use the stack: small, local variables, pass variables by const reference if size > 8 bytes
-2. If you need heap memory, use smart ptr
-    std::shared_ptr<T> myBigData;
-    std::shared_ptr<Base> = std::make_shared<Derived>();
-3.Only when ABSOLUTELY NECESSARY use raw pointers/new
-
-GENERICS: Template
-
-template <typename T>
-class DynamicArray
-{
-    size_t m_size;
-    T * m_arr;
-public:
-    DynamicArray(size_t size)
-        :m_size(size)
-        ,m_arr(new T[size])
-    {}
-
-    ~DynamicArray()
-    {
-        delete [] m_arr;
-    }
-
-    T get(size_t index) const
-    {
-        return m_arr[index];
-    }
-
-    void set(size_t index, T val)
-    {
-        m_arr[index] = val;
-    }
-
-    T & operator [] (size_t index)
-    {
-        return m_arr[index];
-    }
-
-
-}
-
-*/
-
-//Lecture 5
-/*
-    //Movement System
-    for (e : entities) { e.pos += e.speed; }
-
-    //Collision System
-    for (b : bullets)
-        for (e : enemies)
-            if (Physics:IsCollision(b,e))
-                e.health -= b.damage;
-                b.destroy();
-
-    Rendering System
-    for (e : entities) { window.draw(e.sprite, e.pos); }
-
-
-    Architecture
-    GameEngine
-        >Scene
-            >Systems
-            >EntityManager
-                >Entity
-                    >Component
-
-
-    Using Entities
-
-    void doStuff(std::vector<Entity> & entities)
-    {
-        for (auto & e : entities)
-        {
-            e.cTransform->pos += e.cTransform->velocity;
-            e.cShape->shape.setPosition(e.cTransfrom->pos);
-            window.draw(e.cShape->shape);
-        }
-    }
-
-    void sRender(std::vector<Entity> & entities)
-    {
-        for (auto & e : entities)
-            if (e.cShape && e.cTransform)
-            {
-                e.cShape->shape.setPosition(e.CTransform->pos);
-                window.draw(e.Shape->shape);
-            }
-        }
-    }
-
-*/
-
-
-
-//namespace
-namespace globalVariables
-{
-    float grav = 9.81f;
-
-}
-
-
 int main()
 {
     float vOff = 500;
@@ -274,29 +57,7 @@ int main()
     int newPosy;
 
     sf::Vector2i mousePosition;
-    /*
-    while (fin >> newId) 
-    {
-        //std::cout << "read once" << std::endl;
-        
 
-        fin >> newRadius;
-        fin >> newR;
-        fin >> newG;
-        fin >> newB;
-        fin >> newPosx;
-        fin >> newPosy;
-        sf::CircleShape newCircle = sf::CircleShape(newRadius);
-        newCircle.setFillColor(sf::Color(newR, newG, newB));
-        Entity newEntity(newId, newCircle);
-        newEntity.setVecPosition(Vec2(newPosx, newPosy));
-
-   
-        entityVector.push_back(newEntity);
-
-
-    }
-    */
     std::vector<std::shared_ptr<sf::Shape>> shared_Shapes;
 
     std::shared_ptr<sf::Shape> shared_Shape01 = std::make_shared<sf::CircleShape>(20);
@@ -306,29 +67,11 @@ int main()
     shared_Shapes.push_back(shared_Shape01);
     shared_Shapes.push_back(shared_Shape02);
 
-    /*
-    Component testComponent = CTransform(Vec2(50,50),Vec2(50,50));
-    Entity testEntity(55, sf::CircleShape(10));
-    testEntity.addComponent(testComponent);
-    CTransform passComp;
-    if (testEntity.getComponent(testComponent)) {
-        passComp.print();
-    }
-    */
-
-
     Vec2 vec01(1, 1);
     Vec2 vec02(1, 1);
     Vec2 vec03(1, -3);
 
-
-
-    //vec03 += vec02 + vec01;
-   //vec03.add(vec01).add(vec02);
-   // vec01 -= vec02;
-    //vec03.normalize();
     vec02 = Vec2::normalize(vec03);
-    //std::cout << vec02.toString() <<std::endl;
 
     const Vec2 circle1(150, 100);
     const  Vec2 circle2(210 , 200);
@@ -352,16 +95,7 @@ int main()
     }
 
     std::cout << (Vec2::circleOverlap(circle1, circle2, circle1rad, circle2rad)).toString() << std::endl;
-    //if (Vec2::sphereCollision(Vec2(circleShape1.getPosition().x, circleShape1.getPosition().y), Vec2(circleShape2.getPosition().x, circleShape2.getPosition().y), circleShape1.getRadius(), circleShape2.getRadius()))
-    /*
-    if (vec01 != vec02) 
-    {
-        std::cout << "not equal" << std::endl;
 
-    }else{ std::cout << "equal" << std::endl; }
-    std::cout << vec03.toString() << std::endl;
-
-    */
     std::vector<SimpleEntity> allSimpleEntites;
 
     typedef std::vector<std::shared_ptr<SimpleEntity>> EntityVector;
@@ -369,21 +103,6 @@ int main()
 
     EntityVector simpleEntitiesType;
    
- 
-    /*
-    for (int i = 0; i < 20; ++i)
-    {
-        SimpEntPtr simpEnt = (std::make_shared<SimpleEntity>(i, "Default"));
-
-        std::shared_ptr<std::string> simpEntName;
-        simpEntName = std::make_shared<std::string>(std::string("Name") + std::to_string(i));
-        simpEnt->cName = simpEntName;
-        CTransform intermediateTransform(Vec2(i*69%600, i * 33 % 700), Vec2( i *.02, - i * .02));
-        simpEnt->cTransform = std::make_shared<CTransform>(intermediateTransform);
-        simpEnt->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
-        simpleEntitiesType.push_back(simpEnt);
-    }
-    */
     SimpEntPtr nullEntity = (std::make_shared<SimpleEntity>(512, "Broke"));
 
     nullEntity->cName = std::make_shared<std::string>("im so special");
@@ -391,9 +110,6 @@ int main()
    
     nullEntity->cTransform = std::make_shared<CTransform>(Vec2(900, 900), Vec2(0.1, 1.0));
 
-   // allSimpleEntites.push_back(nullEntity);
-
-    //simpleEntitiesType.push_back(nullEntity);
     nullEntity->cShape->setFillColor(sf::Color::Red);
 
     
@@ -433,51 +149,8 @@ int main()
     }
 
 
-    //SimpEntPtr tempEntPtr= manager.addEntity("Default");
-    //tempEntPtr->cShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(40, 40));
-    //tempEntPtr->cTransform  = std::make_shared<CTransform>(Vec2(900, 900), Vec2(5, 2.0));
-    //tempEntPtr->cShape->setFillColor(sf::Color::Blue);
-    //simpleEntitiesType.push_back(tempEntPtr);
-    //std::cout << tempEntPtr.use_count() << std::endl;
     
     manager.update();
-
-    //for (auto e : manager.getEntitiesWithTag("I was Odd"))
-    {
-     //   std::cout << e->m_id << std::endl;
-
-    }
-
-    //std::cout << manager.catEntVec(manager.getAllEntities());
-   // std::cout << manager.catMap();
-    
-  //  for (auto e : manager.getEntitiesWithTag("I was Odd"))
-   // {
-       // std::cout << e->m_id << std::endl;
-      //  e->m_alive = false;
-   // }
-    
-    //manager.update();
-    //std::cout << manager.catMap();
-    
-
-   // std::cout << "cID: " << *simpEnt.cID << " Name: " << *simpEnt.cName <<  std::endl;
-    //if (simpEnt.cShape) {
-       // std::cout << "shape is true" << std::endl;
-   // }
-
-    
-    /*
-    for (auto& e : allSimpleEntites)
-    {
-        if (e.cName && e.cID && e.cTransform)
-        {
-            std::cout << "cID: " << *e.cID << " cName: " << *e.cName << std::endl;
-            e.cTransform->print();
-        }
-
-    }
-    */
 
    
     
@@ -550,16 +223,6 @@ int main()
 
     bool isPaused = false;
 
-    /*
-    hypothetical loop:
-
-    m_entityManager.update();
-    sUserInput();
-    sMovement();
-    sCollision();
-    sRender();
-    m_currentFrame++;
-    */
 
     while (window.isOpen())
     {
@@ -788,12 +451,8 @@ int main()
         std::string clockString = std::to_string(clock.getElapsedTime().asSeconds());
         clockText.setString(clockString);
 
-
-        //sf::Time elapsed = clock.getElapsedTime();
         std::string deltaTimeString = std::to_string( deltaTime);
         fpsText.setString(deltaTimeString);
-
-        //std::cout << deltaTimeString << std::endl;
 
         myEntity.setVecPosition(Vec2(myEntity.getVecPosition().x + movementDir.x * movementMultiplyer * deltaTime, myEntity.getVecPosition().y + movementDir.y * movementMultiplyer * deltaTime) );
 
@@ -804,20 +463,10 @@ int main()
         window.draw(mouse);
 
         window.draw(clockText);
-        //window.draw(myShape); //somehow entity is being passed by value to the entity constructor ie. there's now two
-        //sf::CircleShape specialShape = myEntity.getShape();
-        //window.draw(specialShape);
+
         
         window.draw(fpsText);
-        
-        
-       /*
-        for (auto & s : shared_Shapes)
-        {
-            window.draw(*s);
 
-        }
-        */
         for (auto& e : manager.getAllEntities())
         {
 
