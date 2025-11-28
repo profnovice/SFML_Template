@@ -229,7 +229,17 @@ namespace globalVariables
 
 int main()
 {
+    float vOff = 500;
+    std::array<sf::Vertex, 3> vertices;
 
+    vertices[0] = {{ 0.0f + vOff, 0.0f + vOff}, sf::Color::Green, { 0.0f + vOff,  100 + vOff}};
+    vertices[1] = { { 100+ vOff, 0 + vOff }, sf::Color::Red, { 100 + vOff,  100 + vOff } };
+    vertices[2] = { { 100 + vOff, 100 + vOff}, sf::Color::Blue, { 0.0f + vOff,  0.0f + vOff} };
+    
+
+    sf::VertexBuffer triangles(sf::PrimitiveType::Triangles);
+    triangles.create(vertices.size());
+    triangles.update(vertices.data());
 
     unsigned int windowWidth = 1920u;
     unsigned int windowHeight = 1080u;
@@ -859,7 +869,7 @@ int main()
         window.draw(circleShape2);
 
         window.draw(text);
-
+        window.draw(triangles);
         //end magical draw area
         window.display();
 
