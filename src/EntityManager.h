@@ -23,6 +23,7 @@ class EntityManager {
 public:
 	EntityManager();
 	void update();
+	SimpEntPtr addEntity();
 	SimpEntPtr addEntity(const std::string &);
 	EntityVec getAllEntities();
 	EntityVec getEntitiesWithTag(std::string);

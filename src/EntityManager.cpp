@@ -19,7 +19,12 @@ EntityManager::EntityManager()
 	//:m_entities(std::make_shared<std::vector<SimpleEntity>>())
 {
 }
-
+SimpEntPtr EntityManager::addEntity()
+{
+	SimpEntPtr e = std::shared_ptr<SimpleEntity>(new SimpleEntity(m_uniqueIdIndex++, "Default")); m_totalEntities++;
+	m_queueToAdd.push_back(e);
+	return e;
+}
 SimpEntPtr EntityManager::addEntity(const std::string & tag)
 {
 	//create a new entity obj
@@ -67,12 +72,7 @@ std::string const EntityManager::catEntVec(const EntityVec entities)
 void EntityManager::update()
 {
 
-	
-	//for (auto& tag : m_entityMap)
-	//{
-	//	std::remove_if(tag begin(), m_entities.end(), is_Dead);
 
-	//}
 	
 	for (auto & e : m_queueToAdd)
 	{//store in all entities vec
@@ -98,3 +98,5 @@ void EntityManager::update()
 	m_queueToAdd.clear();
 	
 }
+
+
