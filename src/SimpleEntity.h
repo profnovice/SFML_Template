@@ -21,8 +21,8 @@ public:
 	std::shared_ptr<CShape> cShape;
 	std::shared_ptr<CDisplayTag> cDisplayTag;
 	std::shared_ptr<CCollision> cCollision;
-	std::shared_ptr<cSprite> cSprite;
-	std::shared_ptr<cRidgedBody> cRidgedBody;
+	std::shared_ptr<CSprite> cSprite;
+	std::shared_ptr<CRidgedBody> cRidgedBody;
 
 	bool isAlive() const;
 	const std::string& getTag() const;

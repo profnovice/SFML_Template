@@ -41,13 +41,13 @@ public:
 	CCollision(float r);
 };
 
-class cSprite : public Component
+class CSprite : public Component
 {
 public:
 	sf::Sprite sprite;
-	cSprite(const sf::Texture& texture);
+	CSprite(const sf::Texture& texture);
 };
-class cRidgedBody : public Component
+class CRidgedBody : public Component
 {
 public:
 	float mass = 1.0f;
@@ -56,6 +56,6 @@ public:
 	bool useGravity = true;
 	Vec2 velocity = { 0.0f,0.0f };
 	Vec2 angularVelocity = { 0.0f,0.0f };
-	cRidgedBody();
+	CRidgedBody();
 
 };

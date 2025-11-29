@@ -107,7 +107,7 @@ int main()
     physicsEntity->cTransform = std::make_shared<CTransform>(Vec2(100,100));
     physicsEntity->cShape = std::make_shared<CShape>(64,12,sf::Color::Blue, sf::Color::Red,3.0f);
     physicsEntity->cCollision = std::make_shared<CCollision>(64);
-    physicsEntity->cRidgedBody = std::make_shared<cRidgedBody>();
+    physicsEntity->cRidgedBody = std::make_shared<CRidgedBody>();
 
     manager.update();
     manager.getAllEntities().front()->cRectShape->setFillColor(sf::Color::Blue);
