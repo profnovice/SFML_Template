@@ -1,8 +1,9 @@
+#pragma once
 #include <iostream>
 #include "Vec2.h"
 #include <SFML/Graphics.hpp>
 
-#pragma once
+
 class Component {};
 
 class CTransform : public  Component
