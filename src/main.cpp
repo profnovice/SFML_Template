@@ -93,9 +93,16 @@ int main()
     sf::Clock framesPerSecondClock;
     size_t framesSinceClockTick = 0;
 
-    //SimpEntPtr testSimpleEntity = manager.addEntity("test entity");
 
     bool isPaused = false;
+
+    EntityManager manager;
+    SimpEntPtr ptr = manager.addEntity();
+    
+    ptr->cShape = std::make_shared<sf::RectangleShape>();
+    ptr->cShape->setPosition({ 500,500 });
+    ptr->cShape->setSize({ 500,500 });
+    manager.update();
 
 
     while (window.isOpen())
@@ -288,6 +295,8 @@ int main()
         window.draw(mouse);
         window.draw(clockText);
         window.draw(fpsText);
+
+        window.draw(*manager.getAllEntities()[0]->cShape);
 
         framesSinceClockTick++;
         float elapsedSeconds = framesPerSecondClock.getElapsedTime().asSeconds();
