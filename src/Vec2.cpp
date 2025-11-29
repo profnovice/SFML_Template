@@ -88,6 +88,12 @@ void Vec2::operator/=(const float val)
     y = y / val;
 }
 
+Vec2::operator sf::Vector2f const()
+{
+    return { x,y };
+}
+
+
  // Mutating helpers
 void Vec2::normalize()
 {

@@ -1,6 +1,7 @@
+#pragma once
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <cmath>
-#pragma once
 
 class Vec2 {
 public:
@@ -31,6 +32,9 @@ public:
     void operator -= (const Vec2 & rhs);
     void operator *= (const float rhs);
     void operator /= (const float val);
+
+    // User-defined conversion
+    operator sf::Vector2f const();
 
     // Mutating helpers
     void normalize();
