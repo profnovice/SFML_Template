@@ -34,11 +34,11 @@ CShape::CShape(float radius, int edges, const sf::Color& fill, const sf::Color& 
 CCollision::CCollision(float r)
 	:radius(r) {}
 
-cSprite::cSprite(const sf::Texture& texture)
+CSprite::CSprite(const sf::Texture& texture)
 	:sprite(sf::Sprite(texture))
 {
 }
 
-cRidgedBody::cRidgedBody()
+CRidgedBody::CRidgedBody()
 {
 }
