@@ -109,7 +109,7 @@ void EntityManager::update()
 	}
 
 	m_queueToAdd.clear();
-	std::cout << m_totalEntities << ": Entities" << std::endl;
+	//std::cout << m_totalEntities << ": Entities" << std::endl;
 	
 }
 
