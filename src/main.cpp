@@ -99,11 +99,18 @@ int main()
     EntityManager manager;
     SimpEntPtr ptr = manager.addEntity();
     
-    ptr->cShape = std::make_shared<sf::RectangleShape>();
-    ptr->cShape->setPosition({ 500,500 });
-    ptr->cShape->setSize({ 500,500 });
+    ptr->cRectShape = std::make_shared<sf::RectangleShape>();
+    ptr->cRectShape->setPosition({ 500,500 });
+    ptr->cRectShape->setSize({ 500,500 });
+
+    SimpEntPtr physicsEntity = manager.addEntity("Physics");
+    physicsEntity->cTransform = std::make_shared<CTransform>(Vec2(100,100));
+    physicsEntity->cShape = std::make_shared<CShape>(64,12,sf::Color::Blue, sf::Color::Red,3.0f);
+    physicsEntity->cCollision = std::make_shared<CCollision>(64);
+    physicsEntity->cRidgedBody = std::make_shared<cRidgedBody>();
+
     manager.update();
-    manager.getAllEntities().front()->cShape->setFillColor(sf::Color::Blue);
+    manager.getAllEntities().front()->cRectShape->setFillColor(sf::Color::Blue);
 
 
     while (window.isOpen())
@@ -302,14 +309,13 @@ int main()
         EntityVec recVec = manager.getEntitiesWithTag("Rectangle");
         if (recVec.size() > 0)
         {
-            window.draw(*recVec.front()->cShape);
             recVec.front()->destroy();
         }
         
 
         
         
-        window.draw(*manager.getAllEntities().front()->cShape);
+        window.draw(*manager.getAllEntities().front()->cRectShape);
 
         framesSinceClockTick++;
         float elapsedSeconds = framesPerSecondClock.getElapsedTime().asSeconds();
@@ -324,6 +330,31 @@ int main()
             
 
         }
+
+        for(auto& e : manager.getAllEntities())
+        {
+
+            if (e->cTransform && e->cCollision && e->cRidgedBody)
+            {
+                if (e->cRidgedBody->useGravity)
+                {
+					e->cRidgedBody->velocity.y += 9.81f * (deltaTime / 1000.0f);
+                }
+                e->cTransform->pos += e->cRidgedBody->velocity;
+                if (mouseDown_LeftButton)
+                {
+                    e->cTransform->pos = Vec2(100, 100);
+                    e->cRidgedBody->velocity = Vec2(0, 0);
+
+                }
+            }
+            if (e->cTransform && e->cShape)
+            {
+                e->cShape->circle.setPosition(e->cTransform->pos);
+                window.draw(e->cShape->circle);
+            }
+            
+		}
  
         window.draw(text);
         //end magical draw area
