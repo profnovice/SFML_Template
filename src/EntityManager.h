@@ -1,15 +1,15 @@
+#pragma once
 #include <memory>
 #include <string>
 #include <SFML/Graphics.hpp>
-#include "SimpleEntity.h"
 #include <algorithm>
-
+#include "SimpleEntity.h"
 
 
 typedef std::shared_ptr<SimpleEntity> SimpEntPtr;
 typedef std::vector<std::shared_ptr<SimpleEntity>> EntityVec;
 typedef std::unordered_map <std::string, EntityVec> EntityMap;
-#pragma once
+
 bool is_Dead(const SimpEntPtr);
 
 class EntityManager {

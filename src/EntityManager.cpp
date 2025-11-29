@@ -10,7 +10,7 @@
 
 bool is_Dead(const SimpEntPtr e)
 {
-	return !e->m_alive;
+	return !e->isAlive();
 }
 
 
@@ -23,7 +23,8 @@ EntityManager::EntityManager()
 SimpEntPtr EntityManager::addEntity(const std::string & tag)
 {
 	//create a new entity obj
-	SimpEntPtr e = std::make_shared<SimpleEntity>(m_uniqueIdIndex++, tag); m_totalEntities++;
+	//SimpEntPtr e = std::make_shared<SimpleEntity>(m_uniqueIdIndex++, tag); m_totalEntities++;
+	SimpEntPtr e = std::shared_ptr<SimpleEntity>(new SimpleEntity(m_uniqueIdIndex++, tag)); m_totalEntities++;
 	
 	m_queueToAdd.push_back(e);
 	//return shared ptr of new entity
