@@ -97,21 +97,15 @@ int main()
     bool isPaused = false;
 
     EntityManager manager;
-    SimpEntPtr ptr = manager.addEntity();
-    
-    ptr->cRectShape = std::make_shared<sf::RectangleShape>();
-    ptr->cRectShape->setPosition({ 500,500 });
-    ptr->cRectShape->setSize({ 500,500 });
 
     SimpEntPtr physicsEntity = manager.addEntity("Physics");
     physicsEntity->cTransform = std::make_shared<CTransform>(Vec2(100,100));
     physicsEntity->cShape = std::make_shared<CShape>(64,12,sf::Color::Blue, sf::Color::Red,3.0f);
     physicsEntity->cCollision = std::make_shared<CCollision>(64);
     physicsEntity->cRidgedBody = std::make_shared<CRidgedBody>();
+    physicsEntity->cRidgedBody->useGravity = true;
 
     manager.update();
-    manager.getAllEntities().front()->cRectShape->setFillColor(sf::Color::Blue);
-
 
     while (window.isOpen())
     {
@@ -310,12 +304,9 @@ int main()
         if (recVec.size() > 0)
         {
             recVec.front()->destroy();
+            window.draw(*recVec.front()->cRectShape);
         }
         
-
-        
-        
-        window.draw(*manager.getAllEntities().front()->cRectShape);
 
         framesSinceClockTick++;
         float elapsedSeconds = framesPerSecondClock.getElapsedTime().asSeconds();
@@ -327,8 +318,6 @@ int main()
             framesPerSecondClock.restart();
             framesSinceClockTick = 0;
 
-            
-
         }
 
         for(auto& e : manager.getAllEntities())
@@ -336,6 +325,28 @@ int main()
 
             if (e->cTransform && e->cCollision && e->cRidgedBody)
             {
+                if (e->cTransform->pos.y + e->cCollision->radius >= windowHeight)
+                {
+                    e->cTransform->pos.y -= 1;
+                    e->cRidgedBody->velocity.y *= -1;
+                }
+                if (e->cTransform->pos.y - e->cCollision->radius <= 0)
+                {
+                    e->cTransform->pos.y += 1;
+                    e->cRidgedBody->velocity.y *= -1;
+				}
+                if (e->cTransform->pos.x + e->cCollision->radius >= windowWidth)
+                {
+                    e->cTransform->pos.x -= 1;
+                    e->cRidgedBody->velocity.x *= -1;
+                }
+                if (e->cTransform->pos.x - e->cCollision->radius <= 0)
+                {
+                    e->cTransform->pos.x += 1;
+                    e->cRidgedBody->velocity.x *= -1;
+				}
+
+
                 if (e->cRidgedBody->useGravity)
                 {
 					e->cRidgedBody->velocity.y += 9.81f * (deltaTime / 1000.0f);
@@ -343,8 +354,9 @@ int main()
                 e->cTransform->pos += e->cRidgedBody->velocity;
                 if (mouseDown_LeftButton)
                 {
-                    e->cTransform->pos = Vec2(100, 100);
-                    e->cRidgedBody->velocity = Vec2(0, 0);
+                    Vec2 distance = e->cTransform->pos - Vec2(mousePosition.x,mousePosition.y);
+                    distance.normalize();
+                    e->cRidgedBody->velocity -= distance * 2;
 
                 }
             }
