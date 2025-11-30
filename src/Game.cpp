@@ -146,8 +146,14 @@ void Game::sUserInput()
 			if (m_player->cInput->right)
 				inputDir.x += 1.0f;
 			inputDir.normalize();
+
 			m_player->cInput->inputAngle = std::atan2(inputDir.y, inputDir.x);
+			
 			m_player->cInput->inputMagnitude = 1.0f;
+			if ((inputDir.x == 0 && inputDir.y == 0))
+			{
+				m_player->cInput->inputMagnitude = 0.0f;
+			}
 		}
 		else
 		{
