@@ -12,13 +12,15 @@ class Game
 	EntityManager m_entities;
 	sf::Font m_font;
 	sf::Text m_text;
-	SimpEntPtr Player;
+	SimpEntPtr m_player;
 	int m_score = 0;
 	int m_currentFrame = 0;
 	bool m_paused;
 	bool m_running;
 	bool m_showColliders;
 	Vec2 m_windowOffset;
+	Vec2 m_windowSize;
+	int m_frameLimit;
 
 	template <typename T>
 	void drawWrapper(T); //Not sure I'll need this just preemptive
@@ -27,6 +29,7 @@ class Game
 	
 	void init();//read in config, create window with settings, call spawn player
 	//std::ifstream fin(path);
+	void updateWindow();
 
 	void sMovement();
 	void sUserInput();
