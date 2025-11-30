@@ -42,3 +42,7 @@ CSprite::CSprite(const sf::Texture& texture)
 CRidgedBody::CRidgedBody()
 {
 }
+
+CInput::CInput()
+{
+}

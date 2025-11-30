@@ -60,3 +60,16 @@ public:
 	CRidgedBody();
 
 };
+
+class CInput : public Component
+{
+public:
+	bool primaryAction = false;
+	bool secondaryAction = false;
+	Vec2 mousePosition = { 0.0f,0.0f };
+	bool up = false;
+	bool down = false;
+	bool left = false;
+	bool right = false;
+	CInput();
+};
