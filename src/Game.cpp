@@ -20,24 +20,30 @@ void Game::init(const std::string& config)
 
 void Game::run()
 {
+	sf::Clock framesPerSecondClock;
+	size_t framesSinceClockTick = 0;
+
 	while (m_running)
 	{
 		m_manager.update();
-		//std::cout << m_manager.getAllEntities().size();
-
 		if (!m_paused)
 		{
-			
 			sEnemySpawner();
 			sMovement();
 			sCollision();
 		}
-		//else { std::cout << "Paused\n"; }
 		sUserInput();
 		sRender();
-
 		m_currentFrame++;//could be affected by pause
+		framesSinceClockTick++;
+		float elapsedSeconds = framesPerSecondClock.getElapsedTime().asSeconds();
+		if (elapsedSeconds >= 1.0f)
+		{
+			std::cout << std::to_string((int)(framesSinceClockTick / elapsedSeconds)) << std::endl;
+			framesPerSecondClock.restart();
+			framesSinceClockTick = 0;
 
+		}
 	}
 }
 
@@ -61,9 +67,9 @@ void Game::sMovement()
 {
 	m_player->cTransform->velocity = Vec2::polarToCartesian(
 		m_player->cInput->inputAngle,
-		m_player->cInput->inputMagnitude * 5.0f
+		m_player->cInput->inputMagnitude * 10
 	);
-	std::cout << m_player->cTransform->pos.toString() << std::endl;
+	//std::cout << m_player->cTransform->pos.toString() << std::endl;
 	for (auto& entity : m_manager.getAllEntities())
 	{
 		if (entity->cTransform)
