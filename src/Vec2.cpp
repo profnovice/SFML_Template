@@ -98,6 +98,12 @@ Vec2::operator sf::Vector2f const()
 void Vec2::normalize()
 {
     float magnitude = std::sqrt(x * x + y * y);
+    if (magnitude == 0)
+    {
+        x = 0;
+        y = 0;
+        return;
+    }
     x = x / magnitude;
     y = y / magnitude;
 }
@@ -138,6 +144,10 @@ Vec2 const Vec2::polarToCartesian(const float angle, const float magnitude)
 Vec2 const Vec2::normalize(const Vec2& in)
 {
     float magnitude = std::sqrt(in.x * in.x + in.y * in.y);
+    if (magnitude == 0)
+    {
+        return Vec2(0,0);
+    }
     return Vec2(in.x / magnitude, in.y / magnitude);
 }
 
