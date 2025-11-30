@@ -8,6 +8,7 @@
 #include "Components.h"
 #include "SimpleEntity.h"
 #include "EntityManager.h"
+#include "Game.h"
 
 
 template <typename T>
@@ -17,6 +18,11 @@ T custom_lerp(T a, T b, T t) {
 
 int main()
 {
+    std::string config = std::string("assets/config.txt");
+    Game game(config);
+    game.run();
+
+    return 0;
     unsigned int windowWidth = 1920u;
     unsigned int windowHeight = 1080u;
 
