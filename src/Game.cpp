@@ -82,7 +82,7 @@ void Game::sMovement()
 		m_player->cInput->inputMagnitude * 10
 	);
 	//std::cout << m_player->cTransform->pos.toString() << std::endl;
-	for (auto& entity : m_manager.getAllEntities())
+	for (auto& entity : m_manager.getEntities())
 	{
 		if (entity->cTransform)
 		{
@@ -209,7 +209,7 @@ void Game::sUserInput()
 void Game::sRender()
 {
 	m_window.clear();
-	for (auto& entity : m_manager.getAllEntities())
+	for (auto& entity : m_manager.getEntities())
 	{
 		if (entity->cShape && entity->cTransform)
 		{
@@ -226,11 +226,11 @@ void Game::sEnemySpawner()
 
 void Game::sCollision()
 {
-	for (auto& entityA : m_manager.getAllEntities())
+	for (auto& entityA : m_manager.getEntities())
 	{
 		if (!entityA->cCollision || !entityA->cTransform){ continue; }
 
-		for (auto& entityB : m_manager.getAllEntities())
+		for (auto& entityB : m_manager.getEntities())
 		{
 			if (entityA == entityB) { continue; }
 			if (!entityB->cCollision || !entityB->cTransform) { continue; }
@@ -244,7 +244,7 @@ void Game::sCollision()
 			);
 			entityA->cTransform->pos += overlap / 2.0f;
 			entityB->cTransform->pos -= overlap / 2.0f;
-			
+
 		}
 		
 	}

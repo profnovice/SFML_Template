@@ -58,12 +58,12 @@ SimpEntPtr EntityManager::addRec()
 	return e;
 }
 
-const EntityVec & EntityManager::getAllEntities()
+const EntityVec & EntityManager::getEntities()
 {
 	return m_entities;
 }
 
-const EntityVec & EntityManager::getEntitiesWithTag(std::string tag)
+const EntityVec & EntityManager::getEntities(std::string tag)
 {
 	return m_entityMap[tag];
 }

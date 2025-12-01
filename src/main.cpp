@@ -349,7 +349,7 @@ int main()
        
         /*
         manager.addRec();
-        EntityVec recVec = manager.getEntitiesWithTag("Rectangle");
+        EntityVec recVec = manager.getEntities("Rectangle");
         if (recVec.size() > 0)
         {
             recVec.front()->destroy();
@@ -375,7 +375,7 @@ int main()
 
         }
 
-        for(auto& e : manager.getAllEntities())
+        for(auto& e : manager.getEntities())
         {
 
             if (e->cTransform && e->cCollision && e->cRidgedBody)

@@ -28,8 +28,8 @@ public:
 	SimpEntPtr addEntity();
 	SimpEntPtr addEntity(const std::string &);
 	SimpEntPtr addRec();
-	const EntityVec & getAllEntities();
-	const EntityVec & getEntitiesWithTag(std::string);
+	const EntityVec & getEntities();
+	const EntityVec & getEntities(std::string);
 	std::string const catMap();
 	std::string const catEntVec(const EntityVec);
 
