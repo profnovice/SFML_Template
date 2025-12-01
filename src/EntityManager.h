@@ -20,7 +20,7 @@ class EntityManager {
 	size_t m_totalEntities = 0;
 	size_t m_uniqueIdIndex = 0;
 	int recPlacement = 0;
-	
+	int removeDeadEntities(EntityVec&);
 
 public:
 	EntityManager();

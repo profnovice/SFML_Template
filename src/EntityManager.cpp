@@ -14,6 +14,15 @@ bool is_Dead(const SimpEntPtr e)
 }
 
 
+int EntityManager::removeDeadEntities(EntityVec & vec)
+{ 
+	int removedCount = 0;
+	const auto deadEnd = std::remove_if(vec.begin(), vec.end(), is_Dead);
+	removedCount = std::distance(deadEnd, vec.end());
+	vec.erase(deadEnd, vec.end());
+	return removedCount;
+}
+
 EntityManager::EntityManager()
 	:m_queueToAdd(), m_entities(), m_entityMap()
 	//:m_entities(std::make_shared<std::vector<SimpleEntity>>())
@@ -89,25 +98,20 @@ void EntityManager::update()
 	for (auto & e : m_queueToAdd)
 	{//store in all entities vec
 		m_entities.push_back(e);
-		//store in map of tag->entityvector
-		//std::cout << "Tag: " << e->m_tag << std::endl;
 		m_entityMap[e->m_tag].push_back(e);
-
 	}
-
-
-	const auto deadEnd = std::remove_if(m_entities.begin(), m_entities.end(), is_Dead);
-	m_totalEntities -= std::distance(deadEnd, m_entities.end());
-	m_entities.erase(deadEnd, m_entities.end());
-
-
+	int checkVec = 0;
+	int checkMap = 0;
+	checkVec += removeDeadEntities(m_entities);
+	
 	for (auto & key : m_entityMap)
 	{
-		const auto deadEnd = std::remove_if(key.second.begin(), key.second.end(), is_Dead);
-		key.second.erase(deadEnd, key.second.end());
-
+		checkMap += removeDeadEntities(key.second);
 	}
-
+	if(checkMap != checkVec){
+		std::cout << "EntityManager::update() - Mismatch in removed entity count between main vec and map vecs!" << std::endl;
+	}
+	m_totalEntities -= checkVec;
 	m_queueToAdd.clear();
 	//std::cout << m_totalEntities << ": Entities" << std::endl;
 	
