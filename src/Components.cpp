@@ -65,3 +65,8 @@ CRidgedBody::CRidgedBody()
 CInput::CInput()
 {
 }
+
+CBoundingBox::CBoundingBox(const Vec2& s)
+	:size(s), halfSize(s.x / 2.0f, s.y / 2.0f)
+{
+}

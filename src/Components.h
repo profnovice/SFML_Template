@@ -77,3 +77,11 @@ public:
 	float inputMagnitude = 0.0f;
 	CInput();
 };
+
+class CBoundingBox : public Component
+{
+public:
+	Vec2 size;
+	Vec2 halfSize;
+	CBoundingBox(const Vec2& s);
+};
