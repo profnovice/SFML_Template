@@ -41,6 +41,8 @@ class Game
 	void spawnEnemy(SimpEntPtr entity);
 	void spawnProjectile(SimpEntPtr entity);
 
+	Vec2 overlapAABB(const CTransform& aTrans, const CBoundingBox& aBox, const CTransform& bTrans, const CBoundingBox& bBox);
+
 	public:
 	Game(const std::string & config);
 	void run();

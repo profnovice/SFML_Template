@@ -246,6 +246,7 @@ void Game::sEnemySpawner()
 			);
 			physicsEntity->cShape = std::make_shared<CShape>(radius, 12, specialColor, sf::Color::Red, 3.0f);
 			physicsEntity->cCollision = std::make_shared<CCollision>(radius);
+			//physicsEntity->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(radius * 2.0f, radius * 2.0f));
 			physicsEntity->cRidgedBody = std::make_shared<CRidgedBody>();
 			physicsEntity->cRidgedBody->mass = .25;
 			physicsEntity->cRidgedBody->useGravity = grav;
@@ -304,3 +305,28 @@ void Game::spawnEnemy(SimpEntPtr entity)
 void Game::spawnProjectile(SimpEntPtr entity)
 {
 }
+
+Vec2 Game::overlapAABB(const CTransform& aTrans, const CBoundingBox& aBox, const CTransform& bTrans, const CBoundingBox& bBox)
+{
+	
+	Vec2 overlap(0.0f, 0.0f);
+	float deltaX = bTrans.pos.x - aTrans.pos.x;
+	float deltaY = bTrans.pos.y - aTrans.pos.y;
+	float intersectX = std::abs(deltaX) - (aBox.halfSize.x + bBox.halfSize.x);
+	float intersectY = std::abs(deltaY) - (aBox.halfSize.y + bBox.halfSize.y);
+	
+	if (intersectX < 0.0f && intersectY < 0.0f)
+	{
+		// Collision detected
+		if (std::abs(intersectX) < std::abs(intersectY))
+		{
+			overlap.x = (deltaX > 0) ? intersectX : -intersectX;
+		}
+		else
+		{
+			overlap.y = (deltaY > 0) ? intersectY : -intersectY;
+		}
+	}
+	return overlap;
+}
+
