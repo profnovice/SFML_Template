@@ -1,6 +1,13 @@
-# Ongoing c++ simple game engine from scratch using CMake SFML Project Template
+# Ongoing cross-platform game engine from scratch using CMake SFML Project Template
 
 Learning process with C++, SFML, CMake, etc.
+
+## General Architecture 
+
+A basic Entity Component System layout where entity memory allocation and deallocation is handled exclusivly by an entity manager.    
+Components only store data and the systems in the game loop act on that data.   
+Components include CTransform, CCollision, CRidgedBody, CInput, and more.    
+Pulling heavily from Dave Churchill's excellent COMP4300 - Game Programming video series on YouTube.   
 
 ## Git commit format
 
