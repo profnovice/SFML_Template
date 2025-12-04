@@ -35,7 +35,8 @@ void Game::run()
 {
 	sf::Clock framesPerSecondClock;
 	size_t framesSinceClockTick = 0;
-	sEnemySpawner();
+	//sEnemySpawner();
+	sTestAABB();
 	while (m_running)
 	{
 		m_manager.update();
@@ -43,8 +44,11 @@ void Game::run()
 		{
 			
 			sMovement();
-			sCollision();
+			//sCollision();
+			sAABBCollision();
+			
 		}
+		//sUpdatePreviousPositions();
 		sUserInput();
 		sRender();
 		m_currentFrame++;//could be affected by pause
@@ -85,12 +89,26 @@ void Game::sMovement()
 	//std::cout << m_player->cTransform->pos.toString() << std::endl;
 	for (auto& entity : m_manager.getEntities())
 	{
-		if (entity->cTransform)
+		if (!entity->cTransform){continue;}
+		
+		entity->cTransform->previousPos = entity->cTransform->pos;
+		entity->cTransform->pos += entity->cTransform->velocity;
+
+		if (!entity->cBoundingBox){continue;}
+
+		//bounce off walls
+		if(entity->cTransform->pos.x - entity->cBoundingBox->halfSize.x < 0.0f || 
+			entity->cTransform->pos.x + entity->cBoundingBox->halfSize.x > m_windowSize.x)
 		{
-			entity->cTransform->previousPos = entity->cTransform->pos;
-			entity->cTransform->pos += entity->cTransform->velocity;
-			
+			entity->cTransform->velocity.x = -entity->cTransform->velocity.x;
 		}
+		if (entity->cTransform->pos.y - entity->cBoundingBox->halfSize.y < 0.0f ||
+			entity->cTransform->pos.y + entity->cBoundingBox->halfSize.y > m_windowSize.y)
+		{
+			entity->cTransform->velocity.y = -entity->cTransform->velocity.y;
+		}
+
+		
 	}
 	
 }
@@ -255,6 +273,59 @@ void Game::sEnemySpawner()
 	}
 }
 
+void Game::sTestAABB()
+{
+	int radius = 60;
+	float boxSize = std::sqrt(radius * radius + radius *radius);
+	//from the side of the screen, moving towards each other
+	SimpEntPtr entityA = m_manager.addEntity("AABBTestA");
+	entityA->cTransform = std::make_shared<CTransform>(Vec2(500, 500));
+	entityA->cTransform->velocity = Vec2(0.5f, .1);
+	entityA->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Yellow, sf::Color::Red, 3.0f);
+	entityA->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityA->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+
+	SimpEntPtr entityB = m_manager.addEntity("AABBTestB");
+	entityB->cTransform = std::make_shared<CTransform>(Vec2(700, 500));
+	entityB->cTransform->velocity = Vec2(-0.5f, 0);
+	entityB->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Cyan, sf::Color::Red, 3.0f);
+	entityB->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityB->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+
+	
+	//from top and bottom, moving towards each other
+	SimpEntPtr entityC = m_manager.addEntity("AABBTestC");
+	entityC->cTransform = std::make_shared<CTransform>(Vec2(900, 300));
+	entityC->cTransform->velocity = Vec2(.1, 0.5f);
+	entityC->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Magenta, sf::Color::Red, 3.0f);
+	entityC->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityC->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+
+	SimpEntPtr entityD = m_manager.addEntity("AABBTestD");
+	entityD->cTransform = std::make_shared<CTransform>(Vec2(900, 500));
+	entityD->cTransform->velocity = Vec2(0, -0.5f);
+	entityD->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Green, sf::Color::Red, 3.0f);
+	entityD->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityD->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+
+	//diagonal collision
+	SimpEntPtr entityE = m_manager.addEntity("AABBTestE");
+	entityE->cTransform = std::make_shared<CTransform>(Vec2(1100, 300));
+	entityE->cTransform->velocity = Vec2(0.5f, 0.5f);
+	entityE->cShape = std::make_shared<CShape>(radius, 4, sf::Color::White, sf::Color::Red, 3.0f);
+	entityE->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityE->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+
+	SimpEntPtr entityF = m_manager.addEntity("AABBTestF");
+	entityF->cTransform = std::make_shared<CTransform>(Vec2(1300, 500));
+	entityF->cTransform->velocity = Vec2(-0.5f, -0.5f);
+	entityF->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Black, sf::Color::Red, 3.0f);
+	entityF->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityF->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	
+
+}
+
 void Game::sCollision()
 {
 	for (auto& entityA : m_manager.getEntities())
@@ -289,6 +360,71 @@ void Game::sCollision()
 	}
 }
 
+void Game::sAABBCollision()
+{
+	for (auto& entityA : m_manager.getEntities())
+	{
+		if (!entityA->cBoundingBox || !entityA->cTransform) { continue; }
+		for (auto& entityB : m_manager.getEntities())
+		{
+			if (entityA == entityB) { continue; }
+			if (!entityB->cBoundingBox || !entityB->cTransform) { continue; }
+			Vec2 currentOverlap = overlapAABB(
+				*entityA->cTransform,
+				*entityA->cBoundingBox,
+				*entityB->cTransform,
+				*entityB->cBoundingBox
+			);
+			Vec2 previousOverlap = overlapAABB(
+				CTransform{ entityA->cTransform->previousPos },
+				*entityA->cBoundingBox,
+				CTransform{ entityB->cTransform->previousPos },
+				*entityB->cBoundingBox
+			);
+			std::cout << "Current Overlap: " << currentOverlap.toString() << " Previous Overlap: " << previousOverlap.toString() << std::endl;
+			if(currentOverlap.x > 0.0f && currentOverlap.y > 0.0f)
+			{
+				/*
+				if(previousOverlap.x <= 0.0f && previousOverlap.y <= 0.0f)
+				{
+					//no previous overlap info, just separate in both axes equally
+					entityA->cTransform->pos.x -= currentOverlap.x / 2.0f;
+					entityB->cTransform->pos.x += currentOverlap.x / 2.0f;
+					entityA->cTransform->pos.y -= currentOverlap.y / 2.0f;
+					entityB->cTransform->pos.y += currentOverlap.y / 2.0f;
+				}
+				*/
+				if(previousOverlap.x > 0.0f && previousOverlap.y > 0.0f)
+				{
+					//no movement info, just separate in both axes equally
+					entityA->cTransform->pos.y = entityA->cTransform->previousPos.y;
+					entityB->cTransform->pos.y = entityB->cTransform->previousPos.y;
+				}
+
+				else if (previousOverlap.y > 0.0f)//movement came left or right
+				{
+					entityA->cTransform->pos.x = entityA->cTransform->previousPos.x;
+					entityB->cTransform->pos.x = entityB->cTransform->previousPos.x;
+			
+				}
+				else if (previousOverlap.x > 0.0f)//movement came from top or bottom
+				{
+					entityA->cTransform->pos.y = entityA->cTransform->previousPos.y;
+					entityB->cTransform->pos.y = entityB->cTransform->previousPos.y;
+					
+				}
+				
+
+				std::cout << "AABB Collision detected between Entity " << entityA->getId() << " and Entity " << entityB->getId() << std::endl;
+				
+			}
+			//entityA->cTransform->pos += resolution;
+			//entityB->cTransform->pos -= resolution;
+		}
+	}
+}
+
+
 void Game::spawnPlayer()
 {
 	m_player = m_manager.addEntity("Player");
@@ -308,25 +444,10 @@ void Game::spawnProjectile(SimpEntPtr entity)
 
 Vec2 Game::overlapAABB(const CTransform& aTrans, const CBoundingBox& aBox, const CTransform& bTrans, const CBoundingBox& bBox)
 {
-	
 	Vec2 overlap(0.0f, 0.0f);
 	float deltaX = bTrans.pos.x - aTrans.pos.x;
 	float deltaY = bTrans.pos.y - aTrans.pos.y;
-	float intersectX = std::abs(deltaX) - (aBox.halfSize.x + bBox.halfSize.x);
-	float intersectY = std::abs(deltaY) - (aBox.halfSize.y + bBox.halfSize.y);
-	
-	if (intersectX < 0.0f && intersectY < 0.0f)
-	{
-		// Collision detected
-		if (std::abs(intersectX) < std::abs(intersectY))
-		{
-			overlap.x = (deltaX > 0) ? intersectX : -intersectX;
-		}
-		else
-		{
-			overlap.y = (deltaY > 0) ? intersectY : -intersectY;
-		}
-	}
+	overlap.x = (aBox.halfSize.x + bBox.halfSize.x) - std::abs(deltaX);
+	overlap.y = (aBox.halfSize.y + bBox.halfSize.y) - std::abs(deltaY);
 	return overlap;
 }
-
