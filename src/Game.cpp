@@ -18,14 +18,7 @@ void Game::init(const std::string& config)
 	
 	updateWindow();
 	spawnPlayer();
-	SimpEntPtr collisionTestA = m_manager.addEntity("Points");
-	collisionTestA->cTransform = std::make_shared<CTransform>(Vec2(400.0f, 300.0f));
-	collisionTestA->cShape = std::make_shared<CShape>(50.0f, 12, sf::Color::Green, sf::Color::Red, 3.0f);
-	collisionTestA->cCollision = std::make_shared<CCollision>(50.0f);
-	SimpEntPtr collisionTestB = m_manager.addEntity("Points");
-	collisionTestB->cTransform = std::make_shared<CTransform>(Vec2(600.0f, 300.0f));
-	collisionTestB->cShape = std::make_shared<CShape>(50.0f, 12, sf::Color::Blue, sf::Color::Red, 3.0f);
-	collisionTestB->cCollision = std::make_shared<CCollision>(50.0f);
+	
 
 
 
@@ -241,6 +234,16 @@ void Game::sRender()
 
 void Game::sEnemySpawner()
 {
+
+	SimpEntPtr collisionTestA = m_manager.addEntity("Points");
+	collisionTestA->cTransform = std::make_shared<CTransform>(Vec2(400.0f, 300.0f));
+	collisionTestA->cShape = std::make_shared<CShape>(50.0f, 12, sf::Color::Green, sf::Color::Red, 3.0f);
+	collisionTestA->cCollision = std::make_shared<CCollision>(50.0f);
+	SimpEntPtr collisionTestB = m_manager.addEntity("Points");
+	collisionTestB->cTransform = std::make_shared<CTransform>(Vec2(600.0f, 300.0f));
+	collisionTestB->cShape = std::make_shared<CShape>(50.0f, 12, sf::Color::Blue, sf::Color::Red, 3.0f);
+	collisionTestB->cCollision = std::make_shared<CCollision>(50.0f);
+
 	int iMax = 40;
 	int jMax = 10;
 	int gravIn = 1;
@@ -427,11 +430,15 @@ void Game::sAABBCollision()
 
 void Game::spawnPlayer()
 {
+	int radius = 32;
 	m_player = m_manager.addEntity("Player");
-	m_player->cTransform = std::make_shared<CTransform>(Vec2());
+	m_player->cTransform = std::make_shared<CTransform>(Vec2(50,50));
 	m_player->cInput = std::make_shared<CInput>();
-	m_player->cShape = std::make_shared<CShape>(64);
-	m_player->cCollision = std::make_shared<CCollision>(64);
+	//m_player->cShape = std::make_shared<CShape>(64);
+	m_player->cShape = std::make_shared<CShape>(std::sqrt(radius * radius + radius * radius), 4, sf::Color::Blue, sf::Color::Red, 3.0f);
+	m_player->cShape->circle.setRotation(sf::degrees(45.0f));
+	m_player->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(radius*2, radius*2));
+	//m_player->cCollision = std::make_shared<CCollision>(64);
 }
 
 void Game::spawnEnemy(SimpEntPtr entity)
@@ -441,6 +448,7 @@ void Game::spawnEnemy(SimpEntPtr entity)
 void Game::spawnProjectile(SimpEntPtr entity)
 {
 }
+
 
 Vec2 Game::overlapAABB(const CTransform& aTrans, const CBoundingBox& aBox, const CTransform& bTrans, const CBoundingBox& bBox)
 {
