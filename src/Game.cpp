@@ -18,7 +18,10 @@ void Game::init(const std::string& config)
 	
 	updateWindow();
 	spawnPlayer();
-	
+	ghostTexture = sf::Texture("assets/ghost_01.png"); 
+	ghostTexture.setSmooth(false);
+	sf::Sprite ghostSprite(ghostTexture);
+
 
 
 
@@ -171,7 +174,8 @@ void Game::sUserInput()
 				inputDir.x += 1.0f;
 			inputDir.normalize();
 
-			m_player->cInput->inputAngle = std::atan2(inputDir.y, inputDir.x);
+			m_player->cInput->inputAngle = inputDir.angle();
+				//std::atan2(inputDir.y, inputDir.x);
 			
 			m_player->cInput->inputMagnitude = 1.0f;
 			if ((inputDir.x == 0 && inputDir.y == 0))
@@ -228,6 +232,21 @@ void Game::sRender()
 			entity->cShape->circle.setPosition((sf::Vector2f)(entity->cTransform->pos));
 			m_window.draw(entity->cShape->circle);
 		}
+		if (entity->cSprite&& entity->cTransform)
+		{
+			entity->cSprite->sprite.setPosition((sf::Vector2f)(entity->cTransform->pos));
+			Vec2 rotator = Vec2(entity->cTransform->velocity);
+			rotator.normalize();
+			float angle = rotator.angle();
+			entity->cSprite->sprite.setRotation(sf::degrees(angle));
+			m_window.draw(entity->cSprite->sprite);
+		}
+		if (entity->cBoundingBox && entity->cTransform && m_showColliders)
+		{
+			entity->cBoundingBox->debugRec.setPosition((sf::Vector2f)(entity->cTransform->pos));
+
+			m_window.draw(entity->cBoundingBox->debugRec);
+		}
 	}
 	m_window.display();
 }
@@ -278,21 +297,26 @@ void Game::sEnemySpawner()
 
 void Game::sTestAABB()
 {
-	int radius = 60;
-	float boxSize = std::sqrt(radius * radius + radius *radius);
+	int radius = 36;
+	int points = 6;
+	// = std::sqrt(radius * radius + radius * radius);
+	float boxSize = 60; 
+
 	//from the side of the screen, moving towards each other
 	SimpEntPtr entityA = m_manager.addEntity("AABBTestA");
 	entityA->cTransform = std::make_shared<CTransform>(Vec2(500, 500));
 	entityA->cTransform->velocity = Vec2(0.5f, .1);
-	entityA->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Yellow, sf::Color::Red, 3.0f);
-	entityA->cShape->circle.setRotation(sf::degrees(45.0f));
+	//entityA->cShape = std::make_shared<CShape>(radius, points, sf::Color::Yellow, sf::Color::Red, 3.0f);
+	//entityA->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityA->cSprite = std::make_shared<CSprite>(ghostTexture);
 	entityA->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
 
 	SimpEntPtr entityB = m_manager.addEntity("AABBTestB");
 	entityB->cTransform = std::make_shared<CTransform>(Vec2(700, 500));
 	entityB->cTransform->velocity = Vec2(-0.5f, 0);
-	entityB->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Cyan, sf::Color::Red, 3.0f);
-	entityB->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityB->cShape = std::make_shared<CShape>(radius, points, sf::Color::Cyan, sf::Color::Red, 3.0f);
+	//entityB->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityB->cSprite = std::make_shared<CSprite>(ghostTexture);
 	entityB->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
 
 		
@@ -300,30 +324,30 @@ void Game::sTestAABB()
 	SimpEntPtr entityC = m_manager.addEntity("AABBTestC");
 	entityC->cTransform = std::make_shared<CTransform>(Vec2(900, 300));
 	entityC->cTransform->velocity = Vec2(.1, 0.5f);
-	entityC->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Magenta, sf::Color::Red, 3.0f);
-	entityC->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityC->cShape = std::make_shared<CShape>(radius, points, sf::Color::Magenta, sf::Color::Red, 3.0f);
+	//entityC->cShape->circle.setRotation(sf::degrees(45.0f));
 	entityC->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
 
 	SimpEntPtr entityD = m_manager.addEntity("AABBTestD");
 	entityD->cTransform = std::make_shared<CTransform>(Vec2(900, 500));
 	entityD->cTransform->velocity = Vec2(0, -0.5f);
-	entityD->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Green, sf::Color::Red, 3.0f);
-	entityD->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityD->cShape = std::make_shared<CShape>(radius, points, sf::Color::Green, sf::Color::Red, 3.0f);
+	//entityD->cShape->circle.setRotation(sf::degrees(45.0f));
 	entityD->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
 
 	//diagonal collision
 	SimpEntPtr entityE = m_manager.addEntity("AABBTestE");
 	entityE->cTransform = std::make_shared<CTransform>(Vec2(1100, 300));
 	entityE->cTransform->velocity = Vec2(0.5f, 0.5f);
-	entityE->cShape = std::make_shared<CShape>(radius, 4, sf::Color::White, sf::Color::Red, 3.0f);
-	entityE->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityE->cShape = std::make_shared<CShape>(radius, points, sf::Color::White, sf::Color::Red, 3.0f);
+	//entityE->cShape->circle.setRotation(sf::degrees(45.0f));
 	entityE->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
 
 	SimpEntPtr entityF = m_manager.addEntity("AABBTestF");
 	entityF->cTransform = std::make_shared<CTransform>(Vec2(1300, 500));
 	entityF->cTransform->velocity = Vec2(-0.5f, -0.5f);
-	entityF->cShape = std::make_shared<CShape>(radius, 4, sf::Color::Black, sf::Color::Red, 3.0f);
-	entityF->cShape->circle.setRotation(sf::degrees(45.0f));
+	entityF->cShape = std::make_shared<CShape>(radius, points, sf::Color::Black, sf::Color::Red, 3.0f);
+	//entityF->cShape->circle.setRotation(sf::degrees(45.0f));
 	entityF->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
 	
 	

@@ -23,6 +23,8 @@ class Game
 	Vec2 m_windowSize = Vec2(1920, 1080);
 	int m_frameLimit = 120;
 
+	sf::Texture ghostTexture;
+
 	template <typename T>
 	void drawWrapper(T); //Not sure I'll need this just preemptive
 	void setPaused(bool paused);
