@@ -218,5 +218,9 @@ Vec2 Vec2::circleOverlap(const Vec2& cp1, const Vec2& cp2, float r1, float r2)
 
 float Vec2::toDegrees(float const radians)
 {
-        return radians * (180.0f / static_cast<float>(M_PI));
+    if (radians >= 0)
+    {
+		return radians * (180.0f / static_cast<float>(M_PI));
+    }
+	return 360 + radians * (180.0f / static_cast<float>(M_PI));
 }
