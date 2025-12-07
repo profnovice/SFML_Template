@@ -3,7 +3,6 @@
 #include <string>
 #include <fstream>
 #include <memory>
-#include "Entity.h"
 #include "Vec2.h"
 #include "Components.h"
 #include "SimpleEntity.h"
