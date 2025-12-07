@@ -29,7 +29,7 @@ void Game::init(const std::string& config)
 	spawnPlayer();
 	//sf::Sprite ghostSprite(ghostTexture);
 	m_showColliders = false;
-	m_showImGui = true;
+	m_showImGui = false;
 
 }
 
@@ -281,6 +281,15 @@ void Game::sRender()
 		if (entity->cSprite&& entity->cTransform)
 		{
 			entity->cSprite->sprite.setPosition((entity->cTransform->pos));
+
+			if (entity->getTag() == "Ghost" && entity->cHealth) {
+				sf::Color correctedColor = sf::Color(
+					entity->cSprite->sprite.getColor().r, 
+					entity->cSprite->sprite.getColor().g, 
+					entity->cSprite->sprite.getColor().b, 
+					255 *entity->cHealth->currentHealth/ entity->cHealth->maxHealth);
+				entity->cSprite->sprite.setColor(correctedColor);
+			}
 			
 			Vec2 rotator = Vec2(entity->cTransform->storedVelocity);
 
@@ -368,7 +377,7 @@ void Game::sTestAABB()
 	float boxSize = 60; 
 	
 	//from the side of the screen, moving towards each other
-	SimpEntPtr entityA = m_manager.addEntity("AABBTest");
+	SimpEntPtr entityA = m_manager.addEntity("Ghost");
 	entityA->cTransform = std::make_shared<CTransform>(Vec2(500, 500));
 	entityA->cTransform->velocity = Vec2(0.5f, .1);
 	//entityA->cShape = std::make_shared<CShape>(radius, points, sf::Color::Yellow, sf::Color::Red, 3.0f);
@@ -376,8 +385,10 @@ void Game::sTestAABB()
 	entityA->cSprite = std::make_shared<CSprite>(ghostTexture);
 	entityA->cSprite->sprite.setColor(sf::Color::Yellow);
 	entityA->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	entityA->cHealth = std::make_shared<CHealth>(100);
 
-	SimpEntPtr entityB = m_manager.addEntity("AABBTest");
+
+	SimpEntPtr entityB = m_manager.addEntity("Ghost");
 	entityB->cTransform = std::make_shared<CTransform>(Vec2(700, 500));
 	entityB->cTransform->velocity = Vec2(-0.5f, 0);
 	//entityB->cShape = std::make_shared<CShape>(radius, points, sf::Color::Cyan, sf::Color::Red, 3.0f);
@@ -385,10 +396,11 @@ void Game::sTestAABB()
 	entityB->cSprite = std::make_shared<CSprite>(ghostTexture);
 	entityB->cSprite->sprite.setColor(sf::Color::Cyan);
 	entityB->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	entityB->cHealth = std::make_shared<CHealth>(100);
 
 		
 	//from top and bottom, moving towards each other
-	SimpEntPtr entityC = m_manager.addEntity("AABBTest");
+	SimpEntPtr entityC = m_manager.addEntity("Ghost");
 	entityC->cTransform = std::make_shared<CTransform>(Vec2(900, 300));
 	entityC->cTransform->velocity = Vec2(.1, 0.5f);
 	//entityC->cShape = std::make_shared<CShape>(radius, points, sf::Color::Magenta, sf::Color::Red, 3.0f);
@@ -396,8 +408,9 @@ void Game::sTestAABB()
 	entityC->cSprite = std::make_shared<CSprite>(ghostTexture);
 	entityC->cSprite->sprite.setColor(sf::Color::Magenta);
 	entityC->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	entityC->cHealth = std::make_shared<CHealth>(100);
 
-	SimpEntPtr entityD = m_manager.addEntity("AABBTest");
+	SimpEntPtr entityD = m_manager.addEntity("Ghost");
 	entityD->cTransform = std::make_shared<CTransform>(Vec2(900, 500));
 	entityD->cTransform->velocity = Vec2(0, -0.5f);
 	//entityD->cShape = std::make_shared<CShape>(radius, points, sf::Color::Green, sf::Color::Red, 3.0f);
@@ -405,9 +418,10 @@ void Game::sTestAABB()
 	entityD->cSprite = std::make_shared<CSprite>(ghostTexture);
 	entityD->cSprite->sprite.setColor(sf::Color::Green);
 	entityD->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	entityD->cHealth = std::make_shared<CHealth>(100);
 
 	//diagonal collision
-	SimpEntPtr entityE = m_manager.addEntity("AABBTest");
+	SimpEntPtr entityE = m_manager.addEntity("Ghost");
 	entityE->cTransform = std::make_shared<CTransform>(Vec2(1100, 300));
 	entityE->cTransform->velocity = Vec2(0.5f, 0.5f);
 	//entityE->cShape = std::make_shared<CShape>(radius, points, sf::Color::White, sf::Color::Red, 3.0f);
@@ -415,8 +429,9 @@ void Game::sTestAABB()
 	entityE->cSprite = std::make_shared<CSprite>(ghostTexture);
 	entityE->cSprite->sprite.setColor(sf::Color::White);
 	entityE->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	entityE->cHealth = std::make_shared<CHealth>(100);
 	
-	SimpEntPtr entityF = m_manager.addEntity("AABBTest");
+	SimpEntPtr entityF = m_manager.addEntity("Ghost");
 	entityF->cTransform = std::make_shared<CTransform>(Vec2(1300, 500));
 	entityF->cTransform->velocity = Vec2(-0.5f, -0.5f);
 	//entityF->cShape = std::make_shared<CShape>(radius, points, sf::Color::Black, sf::Color::Red, 3.0f);
@@ -424,6 +439,7 @@ void Game::sTestAABB()
 	entityF->cSprite = std::make_shared<CSprite>(ghostTexture);
 	entityF->cSprite->sprite.setColor(sf::Color::Red);
 	entityF->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	entityF->cHealth = std::make_shared<CHealth>(100);
 
 	
 }
@@ -486,6 +502,19 @@ void Game::sAABBCollision()
 			//std::cout << "Current Overlap: " << currentOverlap.toString() << " Previous Overlap: " << previousOverlap.toString() << std::endl;
 			if(currentOverlap.x > 0.0f && currentOverlap.y > 0.0f)
 			{
+				if (entityA->getTag() == "Projectile" && entityB->getTag() == "Ghost")
+				{
+					entityA->destroy();
+					if(entityB->cHealth)
+					{
+						entityB->cHealth->currentHealth -= 25;
+						if(entityB->cHealth->currentHealth <=0)
+						{
+							spawnExplosion(entityB);
+							entityB->destroy();
+						}
+					}
+				}
 				/*
 				if(previousOverlap.x <= 0.0f && previousOverlap.y <= 0.0f)
 				{
@@ -570,6 +599,19 @@ void Game::spawnProjectile(SimpEntPtr entity)
 	projectile->cTransform->velocity = Vec2::normalize(mouseAngleVec) * 15.0f;
 	projectile->cShape = std::make_shared<CShape>(8.0f, 12, sf::Color::Red, sf::Color::Yellow, 2.0f);
 	projectile->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(16,16));
+}
+
+void Game::spawnExplosion(SimpEntPtr entity)
+{
+	for(int i =0; i <10; i++)
+	{
+		SimpEntPtr particle = m_manager.addEntity("ExplosionParticle");
+		particle->setTTL(30 + (rand() % 30)); //lasts between 0.5 and 1 seconds at 60fps
+		particle->cTransform = std::make_shared<CTransform>(entity->cTransform->pos);
+		float angle = (float)(rand() % 360);
+		particle->cTransform->velocity = Vec2::polarToCartesian(angle * (3.14159f / 180.0f), (float)(2 + (rand() % 4)));
+		particle->cShape = std::make_shared<CShape>(4.0f, 6, sf::Color::Yellow, sf::Color::Red, 1.0f);
+	}
 }
 
 

@@ -52,6 +52,7 @@ class Game
 	void spawnPlayer();
 	void spawnEnemy(SimpEntPtr entity);
 	void spawnProjectile(SimpEntPtr entity);
+	void spawnExplosion(SimpEntPtr entity);
 
 	Vec2 overlapAABB(const CTransform& aTrans, const CBoundingBox& aBox, const CTransform& bTrans, const CBoundingBox& bBox);
 	Vec2 resolveAABB(const Vec2& currentOverlap, const Vec2& previousOverlap);
