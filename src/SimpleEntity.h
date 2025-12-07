@@ -26,6 +26,7 @@ public:
 	std::shared_ptr<CRidgedBody> cRidgedBody;
 	std::shared_ptr<CInput> cInput;
 	std::shared_ptr<CBoundingBox> cBoundingBox;
+	std::shared_ptr<CHealth> cHealth;
 
 	bool isAlive() const;
 	const std::string& getTag() const;
