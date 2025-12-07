@@ -25,6 +25,8 @@ class Game
 	Vec2 m_windowSize = Vec2(1920, 1080);
 	int m_frameLimit = 120;
 
+	sf::Clock m_clock;
+
 	sf::Texture ghostTexture;
 	sf::Texture playerTexture;
 	sf::Texture backgroundTexture;
@@ -44,6 +46,7 @@ class Game
 	void sTestAABB();
 	void sCollision();
 	void sAABBCollision();
+	void sUpdateImGui();
 
 	void spawnPlayer();
 	void spawnEnemy(SimpEntPtr entity);
