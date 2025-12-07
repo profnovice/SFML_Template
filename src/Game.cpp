@@ -20,6 +20,9 @@ void Game::init(const std::string& config)
 	ghostTexture.setSmooth(false);
 	playerTexture = sf::Texture("assets/SimplePlayer.png");
 	playerTexture.setSmooth(false);	
+	backgroundTexture = sf::Texture("assets/Castle_Wall_sdvtcgja_1K_BaseColor.jpg");
+	backgroundTexture.setRepeated(true);
+	
 	updateWindow();
 	spawnPlayer();
 	//sf::Sprite ghostSprite(ghostTexture);
@@ -249,6 +252,12 @@ void Game::sUserInput()
 void Game::sRender()
 {
 	m_window.clear();
+	sf::Sprite background = sf::Sprite(backgroundTexture);
+	background.scale({ .5f, .5f });
+	background.setTextureRect(sf::IntRect({0,0}, { 4096, 4096 }));
+	
+	m_window.draw(background);
+
 	for (auto& entity : m_manager.getEntities())
 	{
 		if (entity->cShape && entity->cTransform)
