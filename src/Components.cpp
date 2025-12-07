@@ -75,3 +75,8 @@ CBoundingBox::CBoundingBox(const Vec2& s)
 	debugRec.setOutlineColor(sf::Color::Red);
 	debugRec.setOutlineThickness(1.0f);
 }
+
+CHealth::CHealth(int maxH)
+	:maxHealth(maxH), currentHealth(maxH)
+{
+}

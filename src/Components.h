@@ -88,3 +88,11 @@ public:
 	CBoundingBox(const Vec2& s);
 	
 };
+
+class CHealth : public Component
+{
+	public:
+	int currentHealth = 100;
+	int maxHealth = 100;
+	CHealth(int maxH);
+};
