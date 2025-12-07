@@ -44,13 +44,14 @@ class Game
 	void sUserInput();
 	void sRender();
 	void sEnemySpawner();
+	void sTestCCollision();
 	void sTestAABB();
 	void sCollision();
 	void sAABBCollision();
 	void sUpdateImGui();
 
 	void spawnPlayer();
-	void spawnEnemy(SimpEntPtr entity);
+	void spawnEnemy(Vec2 pos, Vec2 vel, sf::Color color);
 	void spawnProjectile(SimpEntPtr entity);
 	void spawnExplosion(SimpEntPtr entity);
 

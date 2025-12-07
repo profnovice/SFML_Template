@@ -37,8 +37,8 @@ void Game::run()
 {
 	sf::Clock framesPerSecondClock;
 	size_t framesSinceClockTick = 0;
-	//sEnemySpawner();
-	sTestAABB();
+	//sTestCCollision();
+	//sTestAABB();
 	while (m_running)
 	{
 		m_manager.update();
@@ -52,6 +52,7 @@ void Game::run()
 			sMovement();
 			//sCollision();
 			sAABBCollision();
+			sEnemySpawner();
 			
 		}
 		//sUpdatePreviousPositions();
@@ -327,7 +328,20 @@ void Game::sRender()
 
 void Game::sEnemySpawner()
 {
+	if (m_currentFrame % 240 == 0)
+	{
+		int signx = (rand() % 2) * 2 - 1;
+		int signy = (rand() % 2) * 2 - 1;
+		spawnEnemy(
+			Vec2((float)(rand() % (int)m_windowSize.x), (float)(rand() % (int)m_windowSize.y)),
+			Vec2(signx * (float)(rand() % 3 +2), signy *(float)(rand() % 3 +2)),
+			sf::Color(rand() % 255, rand() % 255, rand() % 255)
+		);
+	}
+}
 
+void Game::sTestCCollision()
+{
 	SimpEntPtr collisionTestA = m_manager.addEntity("Points");
 	collisionTestA->cTransform = std::make_shared<CTransform>(Vec2(400.0f, 300.0f));
 	collisionTestA->cShape = std::make_shared<CShape>(50.0f, 12, sf::Color::Green, sf::Color::Red, 3.0f);
@@ -611,8 +625,18 @@ void Game::spawnPlayer()
 	//m_player->cCollision = std::make_shared<CCollision>(64);
 }
 
-void Game::spawnEnemy(SimpEntPtr entity)
+void Game::spawnEnemy(Vec2 pos, Vec2 vel, sf::Color color)
 {
+	int radius = 36;
+	int points = 6;
+	float boxSize = 60;
+	SimpEntPtr entityA = m_manager.addEntity("Ghost");
+	entityA->cTransform = std::make_shared<CTransform>(pos);
+	entityA->cTransform->velocity = vel;
+	entityA->cSprite = std::make_shared<CSprite>(ghostTexture);
+	entityA->cSprite->sprite.setColor(color);
+	entityA->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	entityA->cHealth = std::make_shared<CHealth>(100);
 }
 
 void Game::spawnProjectile(SimpEntPtr entity)
