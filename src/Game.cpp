@@ -502,8 +502,18 @@ void Game::sAABBCollision()
 			//std::cout << "Current Overlap: " << currentOverlap.toString() << " Previous Overlap: " << previousOverlap.toString() << std::endl;
 			if(currentOverlap.x > 0.0f && currentOverlap.y > 0.0f)
 			{
+				if (entityA->getTag() == "Ghost" && entityB->getTag() == "Ghost")
+				{ 
+				}
+				else
+				{ 
+					//std::cout << "Resolving AABB collision between " << entityA->getTag() << " " << entityA->getId() << " and " << entityB->getTag() << " " << entityB->getId() << std::endl;
+					//std::cout << "Current Overlap: " << currentOverlap.toString() << " Previous Overlap: " << previousOverlap.toString() << std::endl;
+				}
+					
 				if (entityA->getTag() == "Projectile" && entityB->getTag() == "Ghost")
 				{
+					//std::cout << "Projectile hit Ghost!" << std::endl;
 					entityA->destroy();
 					if(entityB->cHealth)
 					{
@@ -514,6 +524,22 @@ void Game::sAABBCollision()
 							entityB->destroy();
 						}
 					}
+					continue;
+				}
+				else if(entityB->getTag() == "Projectile" && entityA->getTag() == "Ghost")
+				{
+					//std::cout << "Projectile hit Ghost!" << std::endl;
+					entityB->destroy();
+					if (entityA->cHealth)
+					{
+						entityA->cHealth->currentHealth -= 25;
+						if (entityA->cHealth->currentHealth <= 0)
+						{
+							spawnExplosion(entityA);
+							entityA->destroy();
+						}
+					}
+					continue;
 				}
 				/*
 				if(previousOverlap.x <= 0.0f && previousOverlap.y <= 0.0f)
@@ -554,7 +580,7 @@ void Game::sAABBCollision()
 				}
 				
 
-				std::cout << "AABB Collision detected between Entity " << entityA->getId() << " and Entity " << entityB->getId() << std::endl;
+				//std::cout << "AABB Collision detected between Entity " << entityA->getId() << " and Entity " << entityB->getId() << std::endl;
 				
 			}
 			//entityA->cTransform->pos += resolution;
