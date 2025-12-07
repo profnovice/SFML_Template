@@ -153,11 +153,22 @@ void Game::sMovement()
 	for(auto & ghost : m_manager.getEntities("Ghost"))
 	{
 		if(!ghost->cTransform){continue;}
-		/* follow player
-		Vec2 toPlayer = m_player->cTransform->pos - ghost->cTransform->pos;
-		toPlayer.normalize();
-		ghost->cTransform->velocity = toPlayer * 2.0f;
-		*/
+		if (!ghost->cAI) { continue; }
+		if (ghost->cAI->isSeeking) {
+			//follow player
+			Vec2 toPlayer = m_player->cTransform->pos - ghost->cTransform->pos;
+			toPlayer.normalize();
+			ghost->cTransform->velocity = toPlayer * 2.0f;
+		}
+		else if (ghost->cAI->cooldown <= 0)
+		{
+			
+			ghost->cAI->isSeeking = true;
+		}
+		else
+		{
+			--ghost->cAI->cooldown;
+		}
 		//if (!ghost->cHealth) { continue; }
 		//ghost->cTransform->velocity = ghost->cTransform->storedVelocity * (ghost->cHealth->currentHealth/ghost->cHealth->maxHealth);
 
@@ -548,6 +559,17 @@ void Game::sAABBCollision()
 				{
 					ghost->cHealth->currentHealth -= 25;
 					ghost->cTransform->velocity = ghost->cTransform->velocity * ((float)ghost->cHealth->currentHealth / (float)ghost->cHealth->maxHealth);
+					if (ghost->cAI)
+					{
+						if (ghost->cAI->isSeeking == true)
+						{
+							ghost->cTransform->velocity *= -1;
+						}
+						ghost->cAI->isSeeking = false;
+						ghost->cAI->cooldown = ghost->cAI->cooldownMax;
+						
+						
+					}
 					if(ghost->cHealth->currentHealth <=0)
 					{
 						spawnExplosion(ghost);
@@ -666,6 +688,7 @@ void Game::spawnEnemy(Vec2 pos, Vec2 vel, sf::Color color)
 	entityA->cSprite->sprite.setColor(color);
 	entityA->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
 	entityA->cHealth = std::make_shared<CHealth>(100);
+	entityA->cAI = std::make_shared<CAI>(120);
 }
 
 void Game::spawnProjectile(SimpEntPtr entity)
