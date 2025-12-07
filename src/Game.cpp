@@ -44,7 +44,11 @@ void Game::run()
 		m_manager.update();
 		if (!m_paused)
 		{
-			
+			if(m_player->cInput->primaryAction)
+			{
+				m_player->cInput->primaryAction = false;
+				spawnProjectile(m_player);
+			}
 			sMovement();
 			//sCollision();
 			sAABBCollision();
@@ -75,7 +79,7 @@ void Game::setPaused(bool paused)
 void Game::updateWindow()
 {
 	m_window.create(sf::VideoMode({ (unsigned int)m_windowSize.x, (unsigned int)m_windowSize.y }), "SimEngine", sf::Style::Default);
-	m_window.setMouseCursorVisible(false);
+	//m_window.setMouseCursorVisible(false);
 	m_window.setFramerateLimit(m_frameLimit);
 	sf::Image iconImage("assets/SFMLPracticeIcon.png");
 	m_window.setIcon(iconImage);
@@ -539,6 +543,14 @@ void Game::spawnEnemy(SimpEntPtr entity)
 
 void Game::spawnProjectile(SimpEntPtr entity)
 {
+	SimpEntPtr projectile = m_manager.addEntity("Projectile");
+	Vec2 mouseAngleVec = entity->cInput->mousePosition - entity->cTransform->pos;
+	Vec2 spawnPos = entity->cTransform->pos + Vec2::normalize(mouseAngleVec) * 40.0f;
+	projectile->setTTL(120); //lasts 2 seconds at 60fps
+	projectile->cTransform = std::make_shared<CTransform>(spawnPos);
+	projectile->cTransform->velocity = Vec2::normalize(mouseAngleVec) * 15.0f;
+	projectile->cShape = std::make_shared<CShape>(8.0f, 12, sf::Color::Red, sf::Color::Yellow, 2.0f);
+	projectile->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(16,16));
 }
 
 
