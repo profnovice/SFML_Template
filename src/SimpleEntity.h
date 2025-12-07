@@ -27,6 +27,7 @@ public:
 	std::shared_ptr<CInput> cInput;
 	std::shared_ptr<CBoundingBox> cBoundingBox;
 	std::shared_ptr<CHealth> cHealth;
+	std::shared_ptr<CAI> cAI;
 
 	bool isAlive() const;
 	const std::string& getTag() const;
