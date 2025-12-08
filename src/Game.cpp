@@ -712,7 +712,20 @@ void Game::spawnExplosion(SimpEntPtr entity)
 		particle->cTransform = std::make_shared<CTransform>(entity->cTransform->pos);
 		float angle = (float)(rand() % 360);
 		particle->cTransform->velocity = Vec2::polarToCartesian(angle * (3.14159f / 180.0f), (float)(2 + (rand() % 4)));
-		particle->cShape = std::make_shared<CShape>(4.0f, 6, sf::Color::Yellow, sf::Color::Red, 1.0f);
+		sf::Color fillColor;
+		sf::Color lineColor;
+		if (entity->cSprite)
+		{
+			fillColor = entity->cSprite->sprite.getColor();
+			fillColor = sf::Color(fillColor.r, fillColor.g, fillColor.b);
+			lineColor = sf::Color(fillColor.r/2, fillColor.g/2, fillColor.b/2);
+		}
+		else
+		{
+			fillColor = sf::Color::Yellow;
+			lineColor = sf::Color::Red;
+		}
+		particle->cShape = std::make_shared<CShape>(4.0f, 6, fillColor, lineColor, 1.0f);
 	}
 }
 
