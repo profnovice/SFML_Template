@@ -18,7 +18,11 @@ T custom_lerp(T a, T b, T t) {
 int main()
 {
     std::string config = std::string("assets/config.txt");
-    Game game(config);
-    game.run();    
+    
+    while (true)
+    {
+        Game game(config);
+        game.run();
+    }
     return 0;
 }

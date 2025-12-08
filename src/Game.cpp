@@ -6,7 +6,7 @@ T custom_lerp(T a, T b, T t) {
 }
 
 Game::Game(const std::string& config)
-	:m_font("assets/8bitOperatorPlus8-Regular.ttf"), m_text(m_font)
+	:m_font("assets/8bitOperatorPlus8-Regular.ttf"), m_text(m_font), m_livesText(m_font)
 {
 	init(config);
 }
@@ -16,6 +16,8 @@ void Game::init(const std::string& config)
 	m_font.openFromFile("assets/8bitOperatorPlus8-Regular.ttf");
 	m_text.setFont(m_font);
 	m_text.setOutlineColor(sf::Color::Black);
+	m_livesText.setFont(m_font);
+	m_livesText.setOutlineColor(sf::Color::Black);
 	
 	ghostTexture = sf::Texture("assets/ghost_01.png"); 
 	ghostTexture.setSmooth(false);
@@ -75,6 +77,10 @@ void Game::run()
 			framesSinceClockTick = 0;
 
 		}
+		if(m_lives <= 0)
+		{
+			m_running = false;
+		}
 	}
 }
 
@@ -92,6 +98,7 @@ void Game::updateWindow()
 	sf::Image iconImage("assets/SFMLPracticeIcon.png");
 	m_window.setIcon(iconImage);
 	m_text.setPosition({ m_windowSize.x / 2.0f - 50.0f, 10.0f });
+	m_livesText.setPosition({ 10.0f, 10.0f });
 
 }
 
@@ -158,7 +165,7 @@ void Game::sMovement()
 			//follow player
 			Vec2 toPlayer = m_player->cTransform->pos - ghost->cTransform->pos;
 			toPlayer.normalize();
-			ghost->cTransform->velocity = toPlayer * 2.0f;
+			ghost->cTransform->velocity = toPlayer * Vec2::dist(Vec2(), ghost->cTransform->velocity);
 		}
 		else if (ghost->cAI->cooldown <= 0)
 		{
@@ -346,7 +353,9 @@ void Game::sRender()
 		}
 	}
 	m_text.setString("SCORE: " + std::to_string(m_score));
+	m_livesText.setString("LIVES: " + std::to_string(m_lives));
 	m_window.draw(m_text);
+	m_window.draw(m_livesText);
 
 	sf::Sprite cursorSprite(cursorTexture);
 	cursorSprite.setOrigin({ cursorTexture.getSize().x / 2.0f, cursorTexture.getSize().y / 2.0f });
@@ -366,10 +375,29 @@ void Game::sEnemySpawner()
 {
 	if (m_currentFrame % 240 == 0)
 	{
+		int posx = (float)(rand() % (int)m_windowSize.x);
+		int posy = (float)(rand() % (int)m_windowSize.y);
+
+		if(m_player->cTransform)
+		{
+			int attempts = 20;
+			while (attempts > 0 && Vec2::dist(Vec2(posx, posy), m_player->cTransform->pos) < 500.0f)
+			{
+				posx = (float)(rand() % (int)m_windowSize.x);
+				posy = (float)(rand() % (int)m_windowSize.y);
+				attempts--;
+			}
+			if(attempts == 0)
+			{
+				//couldn't find a good spawn point away from player
+				return;
+			}
+		}
+
 		int signx = (rand() % 2) * 2 - 1;
 		int signy = (rand() % 2) * 2 - 1;
 		spawnEnemy(
-			Vec2((float)(rand() % (int)m_windowSize.x), (float)(rand() % (int)m_windowSize.y)),
+			Vec2(posx,posy),
 			Vec2(signx * (float)(rand() % 3 +2), signy *(float)(rand() % 3 +2)),
 			sf::Color(rand() % 255, rand() % 255, rand() % 255)
 		);
@@ -581,7 +609,27 @@ void Game::sAABBCollision()
 		}
 
 	}
-
+	bool playerHit = false;
+	for(auto & ghost : m_manager.getEntities("Ghost"))
+	{
+		if(!ghost->cTransform || !ghost->cBoundingBox){continue;}
+		Vec2 currentOverlap = overlapAABB(
+			*m_player->cTransform,
+			*m_player->cBoundingBox,
+			*ghost->cTransform,
+			*ghost->cBoundingBox
+		);
+		if (!playerHit && currentOverlap.x > 0.0f && currentOverlap.y > 0.0f)
+		{
+			-- m_lives;
+			playerHit = true;
+			for(auto & g: m_manager.getEntities("Ghost"))
+			{
+				g->destroy();
+			}
+		}
+		
+	}
 
 	for (auto& entityA : m_manager.getEntities())
 	{
@@ -664,7 +712,7 @@ void Game::spawnPlayer()
 {
 	int radius = 32;
 	m_player = m_manager.addEntity("Player");
-	m_player->cTransform = std::make_shared<CTransform>(Vec2(50,50));
+	m_player->cTransform = std::make_shared<CTransform>(Vec2(m_windowSize.x/2,m_windowSize.y/2));
 	m_player->cInput = std::make_shared<CInput>();
 	//m_player->cShape = std::make_shared<CShape>(64);
 	//m_player->cShape = std::make_shared<CShape>(std::sqrt(radius * radius + radius * radius), 4, sf::Color::Blue, sf::Color::Red, 3.0f);
@@ -681,14 +729,15 @@ void Game::spawnEnemy(Vec2 pos, Vec2 vel, sf::Color color)
 	int radius = 36;
 	int points = 6;
 	float boxSize = 60;
-	SimpEntPtr entityA = m_manager.addEntity("Ghost");
-	entityA->cTransform = std::make_shared<CTransform>(pos);
-	entityA->cTransform->velocity = vel;
-	entityA->cSprite = std::make_shared<CSprite>(ghostTexture);
-	entityA->cSprite->sprite.setColor(color);
-	entityA->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
-	entityA->cHealth = std::make_shared<CHealth>(100);
-	entityA->cAI = std::make_shared<CAI>(120);
+	SimpEntPtr enemy = m_manager.addEntity("Ghost");
+	//enemy->setTTL(2400);
+	enemy->cTransform = std::make_shared<CTransform>(pos);
+	enemy->cTransform->velocity = vel;
+	enemy->cSprite = std::make_shared<CSprite>(ghostTexture);
+	enemy->cSprite->sprite.setColor(color);
+	enemy->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(boxSize, boxSize));
+	enemy->cHealth = std::make_shared<CHealth>(100);
+	enemy->cAI = std::make_shared<CAI>(120);
 }
 
 void Game::spawnProjectile(SimpEntPtr entity)

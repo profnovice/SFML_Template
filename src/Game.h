@@ -15,6 +15,7 @@ class Game
 	EntityManager m_manager;
 	sf::Font m_font;
 	sf::Text m_text;
+	sf::Text m_livesText;
 	SimpEntPtr m_player;
 	int m_score = 0;
 	int m_currentFrame = 0;
@@ -27,6 +28,7 @@ class Game
 	int m_frameLimit = 120;
 	int m_pointsPerEnemy = 100;
 	int m_Score = 0;
+	int m_lives = 3;
 
 	sf::Clock m_clock;
 
