@@ -49,6 +49,7 @@ class Game
 	void sUserInput();
 	void sRender();
 	void sEnemySpawner();
+	void sPointSpawner();
 	void sTestCCollision();
 	void sTestAABB();
 	void sCollision();
@@ -57,6 +58,7 @@ class Game
 
 	void spawnPlayer();
 	void spawnEnemy(Vec2 pos, Vec2 vel, sf::Color color);
+	void spawnPoints(Vec2 pos, int amount);
 	void spawnProjectile(SimpEntPtr entity);
 	void spawnExplosion(SimpEntPtr entity);
 

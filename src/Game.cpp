@@ -57,6 +57,7 @@ void Game::run()
 			//sCollision();
 			sAABBCollision();
 			sEnemySpawner();
+			sPointSpawner();
 			
 		}
 		//sUpdatePreviousPositions();
@@ -311,6 +312,12 @@ void Game::sRender()
 		if (entity->cShape && entity->cTransform)
 		{
 			entity->cShape->circle.setPosition((sf::Vector2f)(entity->cTransform->pos));
+			if (entity->getTag() == "Points")
+			{
+				float pulseValue = (float)(m_currentFrame % 30) / 30;
+				sf::Color updatedColor(pulseValue * 255, 255 - pulseValue * 255, 0);
+				entity->cShape->circle.setFillColor(updatedColor);
+			}
 			m_window.draw(entity->cShape->circle);
 		}
 		if (entity->cSprite&& entity->cTransform)
@@ -402,6 +409,32 @@ void Game::sEnemySpawner()
 			sf::Color(rand() % 255, rand() % 255, rand() % 255)
 		);
 	}
+}
+
+void Game::sPointSpawner()
+{
+	if (m_currentFrame % 600 == 0)
+	{
+		int posx = std::clamp((float)(rand() % (int)m_windowSize.x), 10.0f, m_windowSize.x - 10);
+		int posy = std::clamp((float)(rand() % (int)m_windowSize.y), 10.0f, m_windowSize.y - 10);
+		if (m_player->cTransform)
+		{
+			int attempts = 20;
+			while (attempts > 0 && Vec2::dist(Vec2(posx, posy), m_player->cTransform->pos) < 500.0f)
+			{
+				posx = std::clamp((float)(rand() % (int)m_windowSize.x), 10.0f, m_windowSize.x - 10);
+				posy = std::clamp((float)(rand() % (int)m_windowSize.y), 10.0f, m_windowSize.y - 10);
+				attempts--;
+			}
+			if (attempts == 0)
+			{
+				//couldn't find a good spawn point away from player
+				return;
+			}
+		}
+		spawnPoints(Vec2(posx, posy), rand() % 5 + 1);
+	}
+
 }
 
 void Game::sTestCCollision()
@@ -630,6 +663,23 @@ void Game::sAABBCollision()
 		}
 		
 	}
+	for(auto & points : m_manager.getEntities("Points"))
+	{
+		if(!points->cTransform || !points->cBoundingBox){continue;}
+		Vec2 currentOverlap = overlapAABB(
+			*m_player->cTransform,
+			*m_player->cBoundingBox,
+			*points->cTransform,
+			*points->cBoundingBox
+		);
+		if (currentOverlap.x > 0.0f && currentOverlap.y > 0.0f)
+		{
+			m_score += m_pointsPerEnemy * 5;
+			points->destroy();
+			spawnExplosion(points);
+		}
+		
+	}
 
 	for (auto& entityA : m_manager.getEntities())
 	{
@@ -740,6 +790,15 @@ void Game::spawnEnemy(Vec2 pos, Vec2 vel, sf::Color color)
 	enemy->cAI = std::make_shared<CAI>(120);
 }
 
+void Game::spawnPoints(Vec2 pos, int amount)
+{
+	SimpEntPtr points = m_manager.addEntity("Points");
+	points->setTTL(300);
+	points->cTransform = std::make_shared<CTransform>(pos);
+	points->cShape = std::make_shared<CShape>(16.0f, 12, sf::Color::Green, sf::Color::Yellow, 2.0f);
+	points->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(32, 32));
+}
+
 void Game::spawnProjectile(SimpEntPtr entity)
 {
 	SimpEntPtr projectile = m_manager.addEntity("Projectile");
@@ -768,6 +827,14 @@ void Game::spawnExplosion(SimpEntPtr entity)
 			fillColor = entity->cSprite->sprite.getColor();
 			fillColor = sf::Color(fillColor.r, fillColor.g, fillColor.b);
 			lineColor = sf::Color(fillColor.r/2, fillColor.g/2, fillColor.b/2);
+		}
+		else if (entity->cShape)
+		{
+			fillColor = entity->cShape->circle.getFillColor();
+			lineColor = entity->cShape->circle.getOutlineColor();
+			fillColor = sf::Color(fillColor.r, fillColor.g, fillColor.b);
+			lineColor = sf::Color(lineColor.r / 2, lineColor.g / 2, lineColor.b / 2);
+
 		}
 		else
 		{
