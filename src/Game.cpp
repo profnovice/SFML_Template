@@ -45,9 +45,9 @@ void Game::run()
 	//sTestAABB();
 	while (m_running)
 	{
-		m_manager.update();
 		if (!m_paused)
 		{
+			m_manager.update();
 			if(m_player->cInput->primaryAction)
 			{
 				m_player->cInput->primaryAction = false;
