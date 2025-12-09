@@ -19,8 +19,18 @@ void CTransform::print()
 	std::cout << "Pos: " << pos.x << ", " << pos.y << " Vel: " << velocity.x << ", " << velocity.y << std::endl;
 }
 
+std::string CTransform::toString() const
+{
+	return std::string("");
+}
+
 CDisplayTag::CDisplayTag(const sf::Font& font)
 	:text(sf::Text(font)){}
+
+std::string CDisplayTag::toString() const
+{
+	return std::string("");
+}
 
 CShape::CShape(float radius)
 	:circle(radius)
@@ -50,21 +60,43 @@ CShape::CShape(float radius, int edges, const sf::Color& fill, const sf::Color& 
 		circle.setOrigin({ radius, radius });
 	}
 
+std::string CShape::toString() const
+{
+	return std::string("");
+}
+
 CCollision::CCollision(float r)
 	:radius(r) {}
+
+std::string CCollision::toString() const
+{
+	return std::string("");
+}
 
 CSprite::CSprite(const sf::Texture& texture)
 	:sprite(sf::Sprite(texture))
 {
 	sprite.setOrigin(sf::Vector2f(texture.getSize().x / 2.0f, texture.getSize().y / 2.0f));
 }
+std::string CSprite::toString() const
+{
+	return std::string("");
+}
 
 CRidgedBody::CRidgedBody()
 {
 }
+std::string CRidgedBody::toString() const
+{
+	return std::string("");
+}
 
 CInput::CInput()
 {
+}
+std::string CInput::toString() const
+{
+	return std::string("");
 }
 
 CBoundingBox::CBoundingBox(const Vec2& s)
@@ -75,10 +107,18 @@ CBoundingBox::CBoundingBox(const Vec2& s)
 	debugRec.setOutlineColor(sf::Color::Red);
 	debugRec.setOutlineThickness(1.0f);
 }
+std::string CBoundingBox::toString() const
+{
+	return std::string("");
+}
 
 CHealth::CHealth(int maxH)
 	:maxHealth(maxH), currentHealth(maxH)
 {
+}
+std::string CHealth::toString() const
+{
+	return std::string("");
 }
 
 CAI::CAI()
@@ -89,4 +129,8 @@ CAI::CAI()
 CAI::CAI(int cdMax)
 	: isSeeking(false), cooldown(0), cooldownMax(cdMax)
 {
+}
+std::string CAI::toString() const
+{
+	return std::string("");
 }

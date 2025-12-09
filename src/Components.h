@@ -4,7 +4,10 @@
 #include <SFML/Graphics.hpp>
 
 
-class Component {};
+class Component {
+public:
+	virtual std::string toString() const = 0;
+};
 
 class CTransform : public  Component
 {
@@ -20,6 +23,7 @@ public:
 	CTransform(const Vec2 inPos, const Vec2 inVelocity, float a);
 	~CTransform();
 	void print();
+	std::string toString() const;
 };
 
 class CDisplayTag : public  Component
@@ -27,6 +31,7 @@ class CDisplayTag : public  Component
 public:
 	sf::Text text;
 	CDisplayTag(const sf::Font &);
+	std::string toString() const;
 };
 
 class CShape : public Component
@@ -36,6 +41,7 @@ public:
 	CShape(float radius);
 	CShape(float radius, const sf::Color& fill);
 	CShape(float radius, int edges, const sf::Color& fill, const sf::Color& outline, float thickness);
+	std::string toString() const;
 };
 
 class CCollision : public Component
@@ -43,6 +49,7 @@ class CCollision : public Component
 public:
 	float radius = 0;
 	CCollision(float r);
+	std::string toString() const;
 };
 
 class CSprite : public Component
@@ -50,6 +57,7 @@ class CSprite : public Component
 public:
 	sf::Sprite sprite;
 	CSprite(const sf::Texture& texture);
+	std::string toString() const;
 };
 class CRidgedBody : public Component
 {
@@ -61,6 +69,7 @@ public:
 	Vec2 velocity = { 0.0f,0.0f };
 	Vec2 angularVelocity = { 0.0f,0.0f };
 	CRidgedBody();
+	std::string toString() const;
 
 };
 
@@ -77,6 +86,7 @@ public:
 	float inputAngle = 0.0f;
 	float inputMagnitude = 0.0f;
 	CInput();
+	std::string toString() const;
 };
 
 class CBoundingBox : public Component
@@ -86,7 +96,7 @@ public:
 	Vec2 halfSize;
 	sf::RectangleShape debugRec;
 	CBoundingBox(const Vec2& s);
-	
+	std::string toString() const;
 };
 
 class CHealth : public Component
@@ -95,6 +105,7 @@ public:
 	int currentHealth = 100;
 	int maxHealth = 100;
 	CHealth(int maxH);
+	std::string toString() const;
 };
 
 class CAI : public Component
@@ -105,4 +116,5 @@ public:
 	int cooldownMax = 60;
 	CAI();
 	CAI(int cdMax);
+	std::string toString() const;
 };
