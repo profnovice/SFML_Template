@@ -52,7 +52,7 @@ void Game::run()
 			{
 				m_player->cInput->primaryAction = false;
 				spawnProjectile(m_player);
-			}
+					}
 			sMovement();
 			//sCollision();
 			sAABBCollision();
@@ -869,4 +869,17 @@ Vec2 Game::overlapAABB(const Vec2& aPos, const CBoundingBox& aBox, const Vec2& b
 	overlap.x = (aBox.halfSize.x + bBox.halfSize.x) - std::abs(deltaX);
 	overlap.y = (aBox.halfSize.y + bBox.halfSize.y) - std::abs(deltaY);
 	return overlap;
+}
+
+bool Game::pointInAABB(const Vec2& point, const Vec2& boxPos, const Vec2& boxHalfSize)
+{
+	if (point.x < boxPos.x + boxHalfSize.x &&
+		point.x > boxPos.x - boxHalfSize. x&&
+		point.y < boxPos.y + boxHalfSize.y&&
+		point.y > boxPos.y - boxHalfSize.y
+		)
+	{
+		return true;
+	}
+	return false;
 }

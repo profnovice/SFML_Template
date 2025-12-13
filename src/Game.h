@@ -65,6 +65,7 @@ class Game
 
 	Vec2 overlapAABB(const Vec2& aPos, const CBoundingBox& aBox, const Vec2& bPos, const CBoundingBox& bBox);
 	Vec2 resolveAABB(const Vec2& currentOverlap, const Vec2& previousOverlap);
+	bool pointInAABB(const Vec2& point, const Vec2& boxPos, const Vec2& boxHalfSize);
 
 	public:
 	Game(const std::string & config);
