@@ -9,7 +9,7 @@ void Scene_Menu::init()
 
 }
 
-void Scene_Menu::sDoAction(Action& action) 
+void Scene_Menu::sDoAction(const Action& action) 
 {
 	if(action.getType() == "PRESSED")
 	{

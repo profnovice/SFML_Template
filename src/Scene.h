@@ -21,7 +21,7 @@ public:
 	Scene();
 	virtual void init() = 0;
 	virtual void update() = 0;
-	virtual void sDoAction(Action& action) = 0;
+	virtual void sDoAction(const Action& action) = 0;
 	virtual void sRender(sf::RenderWindow& window) = 0;
 	
 	const InputMap& getInputMap() const;

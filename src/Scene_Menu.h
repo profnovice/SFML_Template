@@ -5,7 +5,7 @@ class Scene_Menu : public Scene {
 
 	void init();
 	void update();
-	void sDoAction(Action& action);
+	void sDoAction(const Action& action);
 	void sRender(sf::RenderWindow& window);
 	
 };
