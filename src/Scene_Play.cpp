@@ -1,8 +1,19 @@
 #include "Scene_Play.h"
 
+void Scene_Play::spawnPlayer()
+{
+	SimpEntPtr player = m_entityManager.addEntity("Player");
+	player->cTransform = std::make_shared<CTransform>(Vec2(500, 500));
+	//player->cSprite = std::make_shared<CSprite>(m_assetManager.getTexture("ghost"));
+	//player->cSprite->sprite.setColor(sf::Color::Yellow);
+	player->cShape = std::make_shared<CShape>(32,6,sf::Color::Blue,sf::Color::Red,2.0f);
+	player->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(64, 64));
+
+}
 void Scene_Play::init()
 {
 	assignActions();
+	spawnPlayer();
 }
 void Scene_Play::assignActions()
 {
@@ -54,9 +65,18 @@ void Scene_Play::sDoAction(const Action& action)
 }
 void Scene_Play::update()
 {
-
+	m_entityManager.update();
 }
 
 void Scene_Play::sRender(sf::RenderWindow& window)
 {
+	for(auto& e : m_entityManager.getEntities())
+	{
+		if (!e->cTransform) { continue; }
+		if (!e->cShape) { continue; }
+		
+		e->cShape->circle.setPosition(e->cTransform->pos);
+		window.draw(e->cShape->circle);
+		
+	}
 }

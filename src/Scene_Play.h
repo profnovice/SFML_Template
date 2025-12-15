@@ -1,7 +1,11 @@
 #pragma once
 #include "Scene.h"
 class Scene_Play : public Scene {
-	protected:
+
+private: 
+	void spawnPlayer();
+
+protected:
 		void assignActions();
 public:
 	void init();
