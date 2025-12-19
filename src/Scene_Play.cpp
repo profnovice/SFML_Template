@@ -1,11 +1,11 @@
-#include "Scene_Play.h"
+#pragma once
+#include "Scene.h"
 
 void Scene_Play::spawnPlayer()
 {
 	SimpEntPtr player = m_entityManager.addEntity("Player");
 	player->cTransform = std::make_shared<CTransform>(Vec2(500, 500));
-	//player->cSprite = std::make_shared<CSprite>(m_assetManager.getTexture("ghost"));
-	//player->cSprite->sprite.setColor(sf::Color::Yellow);
+	player->cSprite = std::make_shared<CSprite>(m_assetManager.getTexture("ghost"));
 	player->cShape = std::make_shared<CShape>(32,6,sf::Color::Blue,sf::Color::Red,2.0f);
 	player->cBoundingBox = std::make_shared<CBoundingBox>(Vec2(64, 64));
 
@@ -77,6 +77,9 @@ void Scene_Play::sRender(sf::RenderWindow& window)
 		
 		e->cShape->circle.setPosition(e->cTransform->pos);
 		window.draw(e->cShape->circle);
+		if (!e->cSprite) { continue; }
+		e->cSprite->sprite.setPosition(e->cTransform->pos);
+		window.draw(e->cSprite->sprite);
 		
 	}
 }
