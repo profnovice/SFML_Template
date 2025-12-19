@@ -1,4 +1,5 @@
-#include "Scene_Menu.h"
+#pragma once
+#include "Scene.h"
 
 void Scene_Menu::init()
 {
