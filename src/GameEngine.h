@@ -3,10 +3,10 @@
 #include <string>
 #include "AssetManager.h"
 #include <fstream>
-#include "Scene_Menu.h"
-#include "Scene_Play.h"
+#include "Scene.h"
 
-class GameEngine {
+class GameEngine 
+{
 	std::unordered_map<std::string, std::unique_ptr<Scene>> m_scenes;
 	sf::RenderWindow m_window;
 	AssetManager m_assetManager;

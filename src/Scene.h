@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "EntityManager.h"
 #include "Action.h"
+#include "AssetManager.h"
 
 typedef std::unordered_map<sf::Keyboard::Scancode, std::string> InputMap;
 
@@ -14,12 +15,13 @@ class Scene {
 	bool m_hasEnded = false;
 
 protected:
+	AssetManager& m_assetManager;
 	EntityManager m_entityManager;
 	void registerAction(sf::Keyboard::Scancode code, std::string name);
 	virtual void assignActions() = 0;
 
 public:
-	Scene();
+	Scene(AssetManager& manager);
 	virtual void init() = 0;
 	virtual void update() = 0;
 	virtual void sDoAction(const Action& action) = 0;
@@ -27,4 +29,32 @@ public:
 	
 	const InputMap& getInputMap() const;
 
+};
+
+class Scene_Play : public Scene {
+
+private:
+	void spawnPlayer();
+
+protected:
+	void assignActions();
+public:
+	using Scene::Scene;
+	void init();
+	void update();
+	void sDoAction(const Action& action);
+	void sRender(sf::RenderWindow& window);
+};
+
+class Scene_Menu : public Scene {
+
+protected:
+	void assignActions();
+
+public:
+	using Scene::Scene;
+	void init();
+	void update();
+	void sDoAction(const Action& action);
+	void sRender(sf::RenderWindow& window);
 };
