@@ -48,6 +48,9 @@ public:
 
 class Scene_Menu : public Scene {
 
+private:
+	void spawnMenuItems();
+
 protected:
 	void assignActions();
 

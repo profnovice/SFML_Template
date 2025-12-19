@@ -41,7 +41,7 @@ void GameEngine::loadAssets(const std::string& config)
 }
 
 void GameEngine::run() {
-	m_currentScene = "play";
+	m_currentScene = "menu";
 	std::cout << "Game Engine Running..." << std::endl;
 	while (m_running) {
 		sUserInput();
