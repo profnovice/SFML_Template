@@ -6,6 +6,8 @@ class Action {
 	std::string type;
 
 public:
+	int mouseX = 0;
+	int mouseY = 0;
 	Action(const std::string& name, const std::string& type);
 	Action();
 	const std::string& getName() const;
