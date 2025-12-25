@@ -23,7 +23,7 @@ void Scene_Play::assignActions()
 }
 void Scene_Play::sDoAction(const Action& action)
 {
-	if (action.getType() == "PRESSED")
+	if (action.getType() == ActionType::Pressed)
 	{
 		if (action.getName() == "MOVE_UP")
 		{
@@ -42,7 +42,7 @@ void Scene_Play::sDoAction(const Action& action)
 			std::cout << "Play Action: MOVE_RIGHT" << std::endl;
 		}
 	}
-	else if (action.getType() == "RELEASED")
+	else if (action.getType() == ActionType::Released)
 	{
 		if (action.getName() == "MOVE_UP")
 		{

@@ -71,7 +71,7 @@ void GameEngine::sUserInput()
 			{
 				continue;
 			}
-			getCurrentScene().sDoAction(Action(getCurrentScene().getInputMap().at(keyPressed->scancode), "PRESSED"));
+			getCurrentScene().sDoAction(Action(getCurrentScene().getInputMap().at(keyPressed->scancode), ActionType::Pressed));
 		}
 		else if( const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
 		{
@@ -79,7 +79,7 @@ void GameEngine::sUserInput()
 			{
 				continue;
 			}
-			getCurrentScene().sDoAction(Action(getCurrentScene().getInputMap().at(keyReleased->scancode), "RELEASED"));
+			getCurrentScene().sDoAction(Action(getCurrentScene().getInputMap().at(keyReleased->scancode), ActionType::Released));
 		}
 
 

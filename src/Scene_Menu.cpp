@@ -26,7 +26,7 @@ void Scene_Menu::assignActions()
 
 void Scene_Menu::sDoAction(const Action& action) 
 {
-	if(action.getType() == "PRESSED")
+	if(action.getType() == ActionType::Pressed)
 	{
 		if (action.getName() == "SELECT")
 		{
@@ -45,7 +45,7 @@ void Scene_Menu::sDoAction(const Action& action)
 			std::cout << "Menu Action: DOWN" << std::endl;
 		}
 	}
-	else if(action.getType() == "RELEASED")
+	else if(action.getType() == ActionType::Released)
 	{
 
 

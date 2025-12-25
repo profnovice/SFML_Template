@@ -1,19 +1,12 @@
 #include "Action.h"
 
-Action::Action(const std::string& name, const std::string& type)
-	: name(name), type(type) {
-}
-Action::Action()
-	: name("NONE"), type("NONE") {
+Action::Action(const std::string& name, ActionType type)
+    : m_name(name), m_type(type) {
 }
 
-const std::string& Action::getName() const
-{
-	return name;
+Action::Action()
+    : m_name("NONE"), m_type(ActionType::Pressed) {
 }
-const std::string& Action::getType() const {
-	return type;
-}
-std::string Action::toString() const {
-	return "Action(Name: " + name + ", Type: " + type + ")";
-}
+
+const std::string& Action::getName() const { return m_name; }
+ActionType Action::getType() const { return m_type; }

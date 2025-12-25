@@ -1,16 +1,27 @@
 #pragma once
 #include <string>
 
+enum class ActionType {
+    Pressed,
+    Released,
+    Moved,
+    Wheel
+};
+
 class Action {
-	std::string name;
-	std::string type;
+    std::string m_name;
+    ActionType  m_type;
 
 public:
-	int mouseX = 0;
-	int mouseY = 0;
-	Action(const std::string& name, const std::string& type);
-	Action();
-	const std::string& getName() const;
-	const std::string& getType() const;
-	std::string toString() const;
+    int mouseX = 0;
+    int mouseY = 0;
+    int mouseDeltaX = 0;
+    int mouseDeltaY = 0;
+    int wheelDelta = 0;
+
+    Action(const std::string& name, ActionType type);
+    Action();
+
+    const std::string& getName() const;
+    ActionType getType() const;
 };
