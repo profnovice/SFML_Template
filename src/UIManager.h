@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
+#include <type_traits>
 
 typedef std::shared_ptr<UIElement> UIElementPtr;
 typedef std::vector<UIElementPtr> UIElementVec;
@@ -24,8 +26,8 @@ public:
 	UIElementVec& getUIElements(const std::string& tag);
 	template <typename T>
 	T& addUIElement(const std::string & tag) {
-		auto& element = std::shared_ptr<T>(new T(m_uniqueIdIndex, tag));
-		++m_uniqueIdIndex;
+		static_assert(std::is_base_of<UIElement, T>::value, "T must derive from UIElement");
+		auto element = std::shared_ptr<T>(new T(m_uniqueIdIndex++, tag));
 		T& ref = *element;
 		m_uiElementsToAdd.push_back(element);
 		return ref;
