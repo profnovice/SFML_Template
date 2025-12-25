@@ -3,20 +3,16 @@
 void Scene_Menu::init()
 {
 	assignActions();
-	spawnMenuItems();
+	createMenuItems();
 }
 
-void Scene_Menu::spawnMenuItems()
+void Scene_Menu::createMenuItems()
 {
-	SimpEntPtr playButton = m_entityManager.addEntity("Button");
-	playButton->cButton = std::make_shared<CButton>(m_assetManager.getFont("mainFont"));
-	playButton->cButton->shape.setSize(sf::Vector2f(200.0f, 50.0f));
-	playButton->cButton->shape.setFillColor(sf::Color::Green);
-	playButton->cButton->text.setString("Play");
-	playButton->cUIElement = std::make_shared<CUIElement>();
-	playButton->cUIElement->anchorPoint = Vec2(0.5f, 0.5f);
-	playButton->cUIElement->offset = Vec2(0.0f, 0.0f);
-	playButton->cUIElement->scale = Vec2(1.0f, 1.0f);
+	auto& test = m_uiManager.addUIElement<TestUIElement>("Test");
+	test.shape.setSize({ 200.0f,100.0f });
+	test.shape.setFillColor(sf::Color::Green);
+	test.shape.setPosition({ 300.0f,250.0f });
+	
 
 }
 
@@ -58,27 +54,11 @@ void Scene_Menu::sDoAction(const Action& action)
 
 void Scene_Menu::update()
 {
+	m_uiManager.update(1.0f / 60.0f);//Assuming 60 FPS for deltaTime
 	m_entityManager.update();
 }
 
 void Scene_Menu::sRender(sf::RenderWindow& window)
 {
-	for (auto& button : m_entityManager.getEntities("Button"))
-	{
-	
-		if (button->cButton && button->cUIElement)
-		{
-			// Update button position based on anchor point and offset
-			sf::Vector2f windowSize = static_cast<sf::Vector2f>(window.getSize());
-			sf::Vector2f anchorPos = sf::Vector2f(button->cUIElement->anchorPoint.x * windowSize.x,
-				button->cUIElement->anchorPoint.y * windowSize.y);
-			sf::Vector2f finalPos = anchorPos + sf::Vector2f(button->cUIElement->offset.x, button->cUIElement->offset.y);
-			button->cButton->shape.setPosition(finalPos);
-			button->cButton->text.setPosition({ finalPos.x + 10.0f, finalPos.y + 10.0f }); // Slight offset for text
-			window.draw(button->cButton->shape);
-			window.draw(button->cButton->text);
-		}
-
-
-	}
+	m_uiManager.render(window);
 }

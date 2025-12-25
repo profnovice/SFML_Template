@@ -5,6 +5,7 @@
 #include "EntityManager.h"
 #include "Action.h"
 #include "AssetManager.h"
+#include "UIManager.h"
 
 typedef std::unordered_map<sf::Keyboard::Scancode, std::string> InputMap;
 
@@ -17,6 +18,7 @@ class Scene {
 protected:
 	AssetManager& m_assetManager;
 	EntityManager m_entityManager;
+	UIManager m_uiManager;
 	void registerAction(sf::Keyboard::Scancode code, std::string name);
 	virtual void assignActions() = 0;
 
@@ -49,7 +51,7 @@ public:
 class Scene_Menu : public Scene {
 
 private:
-	void spawnMenuItems();
+	void createMenuItems();
 
 protected:
 	void assignActions();
