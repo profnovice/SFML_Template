@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UIElement.h"
+#include "TestUIElement.h"
 #include <memory>
 #include <vector>
 #include <algorithm>
@@ -22,7 +23,13 @@ public:
 	UIElementVec& getUIElements();
 	UIElementVec& getUIElements(const std::string& tag);
 	template <typename T>
-	T& addUIElement(const std::string &);
+	T& addUIElement(const std::string & tag) {
+		auto& element = std::shared_ptr<T>(new T(m_uniqueIdIndex, tag));
+		++m_uniqueIdIndex;
+		T& ref = *element;
+		m_uiElementsToAdd.push_back(element);
+		return ref;
+	}
 	bool handleAction(const Action& action);
 	void update(float deltaTime);
 	void render(sf::RenderWindow& window);

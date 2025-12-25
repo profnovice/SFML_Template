@@ -25,16 +25,7 @@ UIElementVec& UIManager::getUIElements(const std::string& tag)
 	return m_uiElementMap[tag];
 }
 
-template<typename T>
-T& UIManager::addUIElement(const std::string & tag)
-{
 
-	auto element = std::make_shared<T>(m_uniqueIdIndex,tag);
-	++m_uniqueIdIndex;
-	T& ref = *element;
-	m_uiElementsToAdd.push_back(element);
-	return ref;
-}
 bool UIManager::handleAction(const Action& action)
 {
 	bool handled = false;
@@ -88,5 +79,12 @@ void UIManager::update(float deltaTime)
 
 void UIManager::render(sf::RenderWindow& window)
 {
+	for (auto& element : m_uiElements)
+	{
+		if (element->m_isVisible)
+		{
+			element->render(window);
+		}
+	}
 }
 
