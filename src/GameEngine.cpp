@@ -41,9 +41,22 @@ void GameEngine::loadAssets(const std::string& config)
 		fin >> type;
 		if (type == "Texture")
 		{
+			
 			std::string name, path;
+			bool repeated;
 			fin >> name >> path;
-			m_assetManager.addTexture(name, path);
+			//	>> repeated;
+			
+			if(name == "tile01")
+			{
+				sf::Texture& texture = m_assetManager.addTexture(name, path, true);
+			}
+			else
+			{
+				sf::Texture& texture = m_assetManager.addTexture(name, path);
+			}
+			//texture.setRepeated(repeated);
+		
 		}
 		else if (type == "Font")
 		{

@@ -7,6 +7,14 @@ sf::Texture &AssetManager::addTexture(const std::string name, const std::string 
 	return m_textures[name];
 }
 
+sf::Texture& AssetManager::addTexture(const std::string name, const std::string path, const bool repeated)
+{
+	sf::Texture texture(path);
+	texture.setRepeated(repeated);
+	m_textures[name] = texture;
+	return m_textures[name];
+}
+
 sf::Font &AssetManager::addFont(const std::string name, const std::string path)
 {
 	sf::Font font(path);

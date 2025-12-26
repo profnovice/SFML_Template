@@ -7,12 +7,13 @@
 #include <string>
 
 class AssetManager {
-	std::unordered_map<std::string, sf::Texture> m_textures;
-	std::unordered_map<std::string, sf::Font> m_fonts;
+	std::unordered_map<std::string,  sf::Texture> m_textures;
+	std::unordered_map<std::string,  sf::Font> m_fonts;
 	//std::unordered_map<std::string, sf::Sound> m_sounds;
 
 public:
 	sf::Texture& addTexture(const std::string name, const std::string path);
+	sf::Texture& addTexture(const std::string name, const std::string path, const bool repeated);
 
 	sf::Font& addFont(const std::string name, const std::string path);
 
