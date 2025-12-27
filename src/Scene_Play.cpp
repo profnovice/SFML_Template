@@ -1,4 +1,5 @@
 #include "Scene_Play.h"
+#include "Physics.h"
 
 void Scene_Play::spawnPlayer()
 {
@@ -175,18 +176,10 @@ void Scene_Play::sAABBCollision()
 		{
 			if (entityA == entityB) { continue; }
 			if (!entityB->cBoundingBox || !entityB->cTransform) { continue; }
-			Vec2 currentOverlap = overlapAABB(
-				entityA->cTransform->pos,
-				*entityA->cBoundingBox,
-				entityB->cTransform->pos,
-				*entityB->cBoundingBox
-			);
-			Vec2 previousOverlap = overlapAABB(
-				entityA->cTransform->previousPos,
-				*entityA->cBoundingBox,
-				entityB->cTransform->previousPos,
-				*entityB->cBoundingBox
-			);
+		
+			Vec2 currentOverlap = Physics::GetOverlap(entityA, entityB);
+			Vec2 previousOverlap = Physics::GetPreviousOverlap(entityA, entityB);
+
 			if (currentOverlap.x > 0.0f && currentOverlap.y > 0.0f)
 			{
 
@@ -214,13 +207,4 @@ void Scene_Play::sAABBCollision()
 
 		}
 	}
-}
-Vec2 Scene_Play::overlapAABB(const Vec2& aPos, const CBoundingBox& aBox, const Vec2& bPos, const CBoundingBox& bBox)
-{
-	Vec2 overlap(0.0f, 0.0f);
-	float deltaX = bPos.x - aPos.x;
-	float deltaY = bPos.y - aPos.y;
-	overlap.x = (aBox.halfSize.x + bBox.halfSize.x) - std::abs(deltaX);
-	overlap.y = (aBox.halfSize.y + bBox.halfSize.y) - std::abs(deltaY);
-	return overlap;
 }

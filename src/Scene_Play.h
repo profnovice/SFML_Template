@@ -10,7 +10,6 @@ protected:
 	void assignActions();
 	void sMovement();
 	void sAABBCollision();
-	Vec2 overlapAABB(const Vec2& aPos, const CBoundingBox& aBox, const Vec2& bPos, const CBoundingBox& bBox);
 public:
 	using Scene::Scene;
 	void init();

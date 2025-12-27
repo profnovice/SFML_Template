@@ -40,3 +40,5 @@ public:
 	const unsigned int getTTLMax() const;
 
 };
+
+typedef std::shared_ptr<SimpleEntity> SimpEntPtr;

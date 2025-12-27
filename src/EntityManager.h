@@ -7,7 +7,6 @@
 #include "SimpleEntity.h"
 
 
-typedef std::shared_ptr<SimpleEntity> SimpEntPtr;
 typedef std::vector<std::shared_ptr<SimpleEntity>> EntityVec;
 typedef std::unordered_map <std::string, EntityVec> EntityMap;
 
